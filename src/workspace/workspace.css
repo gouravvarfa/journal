@@ -1,0 +1,981 @@
+/* Phase 3 — Workspace/Account-Switcher layer. Scoped entirely under `ws-`
+   class names so nothing here can collide with the existing App.css. Reuses
+   the same design tokens (--panel, --primary, --border, etc.) already
+   defined in index.css for visual consistency with the rest of the app. */
+
+.ws-auth-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #f8fafd 0%, #f4f7fb 100%);
+  padding: var(--space-4);
+}
+
+.ws-auth-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.ws-spin {
+  animation: ws-spin 0.8s linear infinite;
+  color: var(--primary);
+}
+
+@keyframes ws-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---- Split-panel auth shell ---- */
+
+.ws-auth-shell {
+  width: 100%;
+  max-width: 900px;
+  min-height: 540px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: #ffffff;
+  border: 1px solid #eef2f7;
+  border-radius: 18px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03), 0 8px 24px rgba(15, 23, 42, 0.05);
+  overflow: hidden;
+}
+
+.ws-auth-brand-panel {
+  position: relative;
+  background: linear-gradient(165deg, #f8fafd 0%, #eef4fd 100%);
+  color: var(--text);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  overflow: hidden;
+  border-right: 1px solid #eef2f7;
+}
+
+.ws-auth-brand-chart {
+  position: absolute;
+  right: -6px;
+  bottom: -4px;
+  width: 190px;
+  height: 90px;
+  color: var(--primary);
+  opacity: 0.07;
+  pointer-events: none;
+}
+
+.ws-auth-brand-chart svg {
+  width: 100%;
+  height: 100%;
+}
+
+.ws-auth-brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 15px;
+  position: relative;
+  z-index: 1;
+}
+
+.ws-auth-brand-mark {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.ws-auth-brand-heading {
+  margin: 0;
+  font-size: clamp(24px, 2.4vw, 30px);
+  line-height: 1.28;
+  font-weight: 700;
+  color: var(--text);
+  position: relative;
+  z-index: 1;
+}
+
+.ws-auth-heading-accent {
+  color: var(--primary);
+}
+
+.ws-auth-brand-sub {
+  margin: -8px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--muted);
+  position: relative;
+  z-index: 1;
+}
+
+.ws-auth-highlights {
+  list-style: none;
+  margin: auto 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  position: relative;
+  z-index: 1;
+}
+
+.ws-auth-highlights li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ws-auth-highlight-icon {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #eff6ff;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ws-auth-highlight-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.ws-auth-highlight-copy strong {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.ws-auth-highlight-copy span {
+  font-size: 12px;
+  color: var(--muted-soft);
+}
+
+.ws-auth-form-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--space-6);
+  position: relative;
+  background: white;
+}
+
+.ws-auth-back-link {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.ws-auth-back-link:hover {
+  color: var(--text);
+}
+
+.ws-auth-card {
+  width: 100%;
+  max-width: 380px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.ws-auth-card h1,
+.ws-auth-card h2 {
+  margin: 0 0 4px;
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.ws-auth-submit {
+  margin-top: 4px;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.ws-primary-btn.ws-auth-submit {
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+}
+
+.ws-auth-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.ws-auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 4px 0;
+  color: var(--muted-soft);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.ws-auth-divider::before,
+.ws-auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.ws-auth-switch {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.ws-auth-switch-link {
+  align-self: center;
+  margin-top: 4px;
+}
+
+.ws-forgot-link {
+  align-self: flex-end;
+  margin-top: -8px;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.ws-password-hint {
+  margin-top: -8px;
+}
+
+.ws-password-hint.warn {
+  color: var(--danger);
+}
+
+.ws-input-icon-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.ws-input-icon-wrap > svg {
+  position: absolute;
+  left: 14px;
+  color: var(--muted-soft);
+  pointer-events: none;
+}
+
+.ws-field .ws-input-icon-wrap input {
+  width: 100%;
+  padding-left: 40px;
+}
+
+.ws-password-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.ws-field .ws-password-wrap input {
+  width: 100%;
+  padding-right: 40px;
+}
+
+.ws-password-toggle {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: var(--muted-soft);
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+}
+
+.ws-password-toggle:hover {
+  color: var(--muted);
+}
+
+.ws-auth-notice {
+  text-align: center;
+  align-items: center;
+}
+
+.ws-auth-notice-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ws-auth-notice-icon.success {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+@media (max-width: 760px) {
+  .ws-auth-shell {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .ws-auth-brand-panel {
+    display: none;
+  }
+
+  .ws-auth-form-panel {
+    padding: var(--space-5) var(--space-4);
+  }
+
+  .ws-auth-back-link {
+    position: static;
+    display: block;
+    margin-bottom: var(--space-3);
+  }
+}
+
+.ws-muted {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 0;
+}
+
+.ws-muted.small {
+  font-size: 11.5px;
+}
+
+.ws-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.ws-field input {
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: 14px;
+  min-height: 44px;
+}
+
+.ws-error {
+  color: var(--danger);
+  background: var(--danger-soft);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-size: 12.5px;
+  margin: 0;
+}
+
+.ws-primary-btn,
+.ws-secondary-btn,
+.ws-link-btn {
+  min-height: 44px;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+}
+
+.ws-primary-btn {
+  background: var(--primary);
+  color: white;
+  border: 1px solid var(--primary);
+  padding: 10px 16px;
+}
+
+.ws-primary-btn:hover:not(:disabled) {
+  background: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+.ws-primary-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.ws-primary-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ws-secondary-btn {
+  background: var(--panel);
+  border: 1px solid var(--border-strong);
+  color: var(--text);
+  padding: 10px 16px;
+}
+
+.ws-secondary-btn:hover:not(:disabled) {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.ws-link-btn {
+  background: none;
+  border: none;
+  color: var(--primary);
+  padding: 4px;
+}
+
+.ws-link-btn:hover {
+  color: var(--primary-dark);
+}
+
+/* Every focusable control gets one consistent, visible focus ring —
+   accessibility and polish in one place, instead of relying on default
+   per-browser outlines that vary in thickness/color. */
+.ws-field input:focus-visible,
+.ws-field select:focus-visible,
+.ws-primary-btn:focus-visible,
+.ws-secondary-btn:focus-visible,
+.ws-link-btn:focus-visible,
+.ws-nav-btn:focus-visible,
+.ws-close-btn:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+.ws-field input,
+.ws-field select {
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.ws-field input:focus,
+.ws-field select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+
+/* ---- Workspace bar ----
+   Deliberately a distinct, dark "context strip" — like a team/org switcher
+   bar (Vercel, GitHub) — rather than a second white header stacked on top
+   of the app's own toolbar. Same idea in both light and dark app themes:
+   this bar signals "you're in a different layer" instead of trying (and
+   failing) to look like part of the app chrome below it. */
+
+.ws-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: 0 var(--space-4);
+  min-height: 52px;
+  background: #0f172a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 40;
+}
+
+.ws-bar-workspace {
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 700;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.ws-bar .ws-switcher-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: white;
+}
+
+.ws-bar .ws-switcher-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.ws-bar .ws-switcher-label {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.ws-bar .ws-nav-btn {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.ws-bar .ws-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+}
+
+.ws-bar .ws-user-menu-trigger {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.ws-bar .ws-user-menu-trigger:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.ws-bar .ws-user-menu-name {
+  color: white;
+}
+
+.ws-bar-left,
+.ws-bar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.ws-bar-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.ws-nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  min-height: 38px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  position: relative;
+}
+
+.ws-nav-btn:hover {
+  background: var(--panel-muted);
+  color: var(--text);
+}
+
+.ws-nav-btn-badge {
+  padding-right: 10px;
+}
+
+/* ---- User menu ---- */
+
+.ws-user-menu {
+  position: relative;
+}
+
+.ws-user-menu-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 12px 4px 4px;
+  min-height: 40px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.ws-user-menu-trigger:hover {
+  background: var(--panel-muted);
+  border-color: var(--border-strong);
+}
+
+.ws-user-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: var(--primary);
+  color: white;
+  font-size: 12px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ws-user-menu-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ws-user-menu-badge {
+  position: static;
+}
+
+.ws-user-dropdown {
+  right: 0;
+  left: auto;
+  min-width: 240px;
+}
+
+.ws-user-dropdown-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 10px 10px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+
+.ws-user-dropdown-header strong {
+  font-size: 13.5px;
+  color: var(--text);
+}
+
+.ws-dropdown-item-danger {
+  color: var(--danger);
+}
+
+.ws-dropdown-item-danger:hover {
+  background: var(--danger-soft);
+}
+
+/* ---- Account switcher ---- */
+
+.ws-switcher {
+  position: relative;
+}
+
+.ws-switcher-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  background: var(--panel-muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  min-height: 44px;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.ws-switcher-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--muted-soft);
+}
+
+.ws-dropdown-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+}
+
+.ws-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 61;
+  min-width: 220px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ws-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 9px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  min-height: 40px;
+}
+
+.ws-dropdown-item:hover,
+.ws-dropdown-item.active {
+  background: var(--primary-soft);
+}
+
+.ws-badge-muted {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--muted-soft);
+  background: var(--panel-muted);
+  padding: 2px 6px;
+  border-radius: 999px;
+}
+
+/* ---- My Accounts modal ---- */
+
+.ws-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  animation: ws-fade-in 0.15s ease;
+}
+
+@keyframes ws-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes ws-modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
+@keyframes ws-dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.ws-dropdown {
+  animation: ws-dropdown-in 0.12s ease;
+}
+
+.ws-modal-card {
+  width: 100%;
+  max-width: 640px;
+  max-height: 85vh;
+  overflow-y: auto;
+  animation: ws-modal-in 0.18s cubic-bezier(0.2, 0.8, 0.3, 1);
+  background: var(--panel);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.ws-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.ws-modal-header h2 {
+  margin: 0 0 2px;
+  font-size: 1.1rem;
+  color: var(--text);
+}
+
+.ws-close-btn {
+  background: none;
+  border: none;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--muted);
+  cursor: pointer;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.ws-empty-state {
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  text-align: center;
+}
+
+.ws-section-title {
+  margin: 4px 0 0;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--muted-soft);
+}
+
+.ws-account-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--space-3);
+}
+
+.ws-account-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--panel);
+}
+
+.ws-account-card.active {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+}
+
+.ws-account-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ws-role-pill {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--success-soft);
+  color: var(--success);
+  flex-shrink: 0;
+}
+
+.ws-account-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.ws-danger-link {
+  color: var(--danger);
+}
+
+.ws-members-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.ws-pending-row {
+  opacity: 0.85;
+}
+
+.ws-invitations-btn {
+  position: relative;
+}
+
+.ws-badge-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  margin-left: 6px;
+  border-radius: 999px;
+  background: var(--danger);
+  color: white;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.ws-members-table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--muted-soft);
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.ws-members-table td {
+  padding: 8px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.ws-invite-row {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.ws-invite-row .ws-field {
+  flex: 1 1 200px;
+}
+
+.ws-field select {
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: 14px;
+  min-height: 44px;
+}
+
+.ws-add-account-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  border-top: 1px solid var(--border);
+  padding-top: var(--space-3);
+}
+
+.ws-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+@media (max-width: 640px) {
+  .ws-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ws-bar-left,
+  .ws-bar-right {
+    justify-content: space-between;
+  }
+
+  .ws-account-grid {
+    grid-template-columns: 1fr;
+  }
+}

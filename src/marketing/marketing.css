@@ -1,0 +1,563 @@
+/* Public marketing site — deliberately its own visual identity, no
+   dashboard chrome. Reuses the app's color tokens (index.css) for brand
+   consistency but never imports any `ws-`/App.css component styling. */
+
+.mk-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #eef5ff 0%, #f7fafd 22%, #f6f8fc 55%, #f6f8fc 100%);
+  color: var(--text);
+  position: relative;
+}
+
+/* Only for plain inline prose links (not nav/button/footer links, which
+   already have their own explicit styling) — deliberately scoped rather
+   than a blanket `a` reset, so it can never fight a button's own color. */
+.mk-inline-link {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.mk-inline-link:hover {
+  text-decoration: underline;
+}
+
+.mk-nav {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px max(24px, env(safe-area-inset-left, 0px));
+  padding-top: calc(16px + env(safe-area-inset-top, 0px));
+  border-bottom: 1px solid var(--border);
+  background: var(--panel);
+  flex-wrap: wrap;
+}
+
+.mk-nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.mk-nav-mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.mk-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.mk-nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.mk-nav-links a:hover,
+.mk-nav-links a.active {
+  color: var(--text);
+}
+
+.mk-nav-cta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mk-btn-primary,
+.mk-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 13.5px;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+}
+
+.mk-btn-primary:active,
+.mk-btn-secondary:active {
+  transform: translateY(1px);
+}
+
+.mk-btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.mk-btn-primary:hover {
+  background: var(--primary-dark);
+}
+
+.mk-btn-secondary {
+  background: var(--panel);
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+
+.mk-btn-secondary:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.mk-card,
+.mk-pricing-card {
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.mk-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.mk-pricing-card:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
+}
+
+.mk-nav-links a {
+  transition: color 0.15s ease;
+}
+
+.mk-main {
+  flex: 1;
+}
+
+.mk-section {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 56px 24px;
+}
+
+.mk-section.tight {
+  padding-top: 32px;
+  padding-bottom: 32px;
+}
+
+.mk-hero {
+  text-align: center;
+  padding: 72px 24px 48px;
+}
+
+.mk-hero h1 {
+  font-size: clamp(28px, 5vw, 44px);
+  line-height: 1.15;
+  margin: 0 0 16px;
+  font-weight: 800;
+}
+
+.mk-hero p.mk-sub {
+  max-width: 620px;
+  margin: 0 auto 28px;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.mk-hero-cta {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.mk-demo-label {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted-soft);
+  background: var(--panel-muted);
+  padding: 3px 8px;
+  border-radius: 999px;
+  margin-bottom: 8px;
+}
+
+.mk-showcase-scroll {
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding: 8px 24px 24px;
+  margin: 0 -24px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.mk-showcase-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+.mk-showcase-scroll::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 999px;
+}
+
+.mk-browser-frame {
+  flex: 0 0 auto;
+  width: min(880px, 86vw);
+  scroll-snap-align: center;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03), 0 20px 44px rgba(15, 23, 42, 0.08);
+}
+
+.mk-browser-chrome {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--panel-muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.mk-browser-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.mk-browser-dot.red {
+  background: #f87171;
+}
+
+.mk-browser-dot.yellow {
+  background: #fbbf24;
+}
+
+.mk-browser-dot.green {
+  background: #4ade80;
+}
+
+.mk-browser-title {
+  margin-left: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.mk-browser-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.mk-eyebrow {
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin: 0 0 8px;
+}
+
+.mk-section h2 {
+  font-size: clamp(22px, 3.5vw, 30px);
+  margin: 0 0 12px;
+  font-weight: 800;
+}
+
+.mk-section > p.mk-lead {
+  color: var(--muted);
+  max-width: 640px;
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0 0 32px;
+}
+
+.mk-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.mk-grid.cols-2 {
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+.mk-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+
+.mk-card h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.mk-card p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.mk-card ul {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.7;
+}
+
+.mk-steps {
+  counter-reset: mk-step;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+}
+
+.mk-step {
+  position: relative;
+  padding-left: 44px;
+}
+
+.mk-step::before {
+  counter-increment: mk-step;
+  content: counter(mk-step);
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-weight: 800;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mk-step h4 {
+  margin: 0 0 4px;
+  font-size: 14.5px;
+  font-weight: 800;
+}
+
+.mk-step p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.mk-tree {
+  font-family: 'SFMono-Regular', Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.9;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  overflow-x: auto;
+  color: var(--muted);
+  white-space: pre;
+}
+
+.mk-cycle-toggle {
+  display: inline-flex;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+  margin-bottom: 28px;
+}
+
+.mk-cycle-toggle button {
+  border: none;
+  background: none;
+  padding: 7px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.mk-cycle-toggle button.active {
+  background: var(--primary);
+  color: white;
+}
+
+.mk-pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.mk-pricing-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mk-pricing-card.featured {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
+}
+
+.mk-pricing-card h3 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.mk-pricing-price {
+  font-size: 30px;
+  font-weight: 800;
+}
+
+.mk-pricing-price small {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.mk-pricing-card ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 13.5px;
+}
+
+.mk-faq-item {
+  border-bottom: 1px solid var(--border);
+  padding: 16px 0;
+}
+
+.mk-faq-item h4 {
+  margin: 0 0 6px;
+  font-size: 14.5px;
+  font-weight: 800;
+}
+
+.mk-faq-item p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+.mk-final-cta {
+  position: relative;
+  text-align: center;
+  background: linear-gradient(135deg, #2f6ff0 0%, #1d4ed8 100%);
+  color: white;
+  border-radius: 24px;
+  padding: 56px 24px;
+  margin: 8px 24px 0;
+  overflow: hidden;
+  box-shadow: 0 20px 44px rgba(29, 78, 216, 0.28);
+}
+
+.mk-final-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(480px 240px at 12% -10%, rgba(255, 255, 255, 0.16), transparent 60%),
+    radial-gradient(420px 220px at 100% 120%, rgba(255, 255, 255, 0.12), transparent 60%);
+  pointer-events: none;
+}
+
+.mk-final-cta > * {
+  position: relative;
+}
+
+.mk-final-cta h2 {
+  color: white;
+  margin: 0 0 10px;
+  font-size: clamp(22px, 3vw, 28px);
+}
+
+.mk-final-cta p {
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 0 28px;
+  font-size: 15px;
+}
+
+.mk-final-cta .mk-btn-primary {
+  background: white;
+  color: var(--primary);
+  padding: 12px 28px;
+  font-size: 14px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+}
+
+.mk-final-cta .mk-btn-primary:hover {
+  background: #f4f8ff;
+  color: var(--primary-dark);
+}
+
+.mk-footer {
+  border-top: 1px solid var(--border);
+  padding: 32px 24px calc(32px + env(safe-area-inset-bottom, 0px));
+  text-align: center;
+  color: var(--muted-soft);
+  font-size: 12.5px;
+}
+
+.mk-footer a {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .mk-nav {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .mk-nav-links {
+    justify-content: center;
+  }
+
+  .mk-final-cta {
+    margin: 8px 12px 0;
+    padding: 44px 20px;
+    border-radius: 18px;
+  }
+}

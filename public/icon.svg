@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#eef4ff"/>
+    </linearGradient>
+    <linearGradient id="pageL" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8fc2ff"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <linearGradient id="pageR" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#bcdcff"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+    <linearGradient id="spine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1e3a8a"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="arrow" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <linearGradient id="letterJ" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" fill="url(#bg)"/>
+
+  <!-- candlesticks -->
+  <g stroke-linecap="round">
+    <line x1="150" y1="150" x2="150" y2="215" stroke="#16a34a" stroke-width="6"/>
+    <rect x="138" y="168" width="24" height="34" rx="4" fill="#16a34a"/>
+
+    <line x1="197" y1="118" x2="197" y2="230" stroke="#16a34a" stroke-width="6"/>
+    <rect x="185" y="140" width="24" height="66" rx="4" fill="#16a34a"/>
+
+    <line x1="244" y1="88" x2="244" y2="242" stroke="#16a34a" stroke-width="7"/>
+    <rect x="230" y="112" width="28" height="104" rx="4" fill="#16a34a"/>
+
+    <line x1="294" y1="150" x2="294" y2="245" stroke="#dc2626" stroke-width="6"/>
+    <rect x="282" y="165" width="24" height="56" rx="4" fill="#dc2626"/>
+
+    <line x1="341" y1="175" x2="341" y2="240" stroke="#dc2626" stroke-width="6"/>
+    <rect x="329" y="188" width="24" height="34" rx="4" fill="#dc2626"/>
+  </g>
+
+  <!-- breakout arrow -->
+  <path d="M262 175 L370 95" stroke="url(#arrow)" stroke-width="15" stroke-linecap="round"/>
+  <path d="M328 88 L378 92 L372 142 Z" fill="url(#arrow)"/>
+
+  <!-- open book -->
+  <path d="M84 268 C150 234 210 234 256 272 L256 372 C210 334 150 334 84 368 Z" fill="url(#pageL)"/>
+  <path d="M428 268 C362 234 302 234 256 272 L256 372 C302 334 362 334 428 368 Z" fill="url(#pageR)"/>
+  <path d="M84 368 C150 334 210 334 256 372 C302 334 362 334 428 368 L428 384 C362 350 302 350 256 388 C210 350 150 350 84 384 Z" fill="url(#spine)"/>
+
+  <!-- TJ wordmark -->
+  <text x="256" y="470" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="800" font-size="86">
+    <tspan fill="#0f172a">T</tspan><tspan fill="url(#letterJ)">J</tspan>
+  </text>
+</svg>
