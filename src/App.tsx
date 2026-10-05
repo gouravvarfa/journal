@@ -54,7 +54,13 @@ import {
   toTradeFromDraft,
 } from './services/journalService'
 import type { Account, BackupBundle, Trade, TradeDraft, TradingSegment } from './types'
-import { fetchRemoteOnlyAccountsWithTrades } from './workspace/tradeSync'
+import { ApiError, type TradingAccountApi } from './workspace/api'
+import {
+  deleteBusinessTrade,
+  fetchBusinessAccountWithTrades,
+  fetchRemoteOnlyAccountsWithTrades,
+  saveBusinessTrade,
+} from './workspace/tradeSync'
 import {
   calculateTradeStatus,
   computePnl,
@@ -98,6 +104,9 @@ const navItems: Array<{ key: TabKey; label: string; icon: React.ComponentType<{ 
 
 const bottomNavKeys: TabKey[] = ['dashboard', 'journal', 'open-trades', 'analytics', 'accounts']
 const bottomNavItems = bottomNavKeys.map((key) => navItems.find((item) => item.key === key)!)
+
+// Tabs that only exist to modify data (account management, backup restore).
+const mutationTabKeys: TabKey[] = ['accounts', 'settings']
 
 const brokerPalette = ['#2563EB', '#F59E0B', '#7C3AED', '#0D9488', '#DB2777', '#0EA5E9']
 
@@ -207,7 +216,27 @@ const defaultAccountDraft = () => ({
   accountType: 'Trading',
 })
 
-function App() {
+interface AppProps {
+  /**
+   * 'personal' = the user's own local accounts, full edit.
+   * 'view' = accounts shared with the user as VIEWER, strictly read-only.
+   * 'business' = one backend business account (`businessAccount`), read from and written to the backend only; read-only when the user's role is VIEWER.
+   */
+  mode?: 'personal' | 'view' | 'business'
+  businessAccount?: TradingAccountApi
+  /** Extra sidebar entries that run an action instead of switching tabs (used by Business for Accounts / Portfolios). */
+  extraNav?: Array<{ key: string; label: string; icon: React.ComponentType<{ size?: number }>; onClick: () => void; active?: boolean }>
+  /** When set, replaces the tab content in the main area (Business "User and Permissions"). */
+  extraPage?: React.ReactNode
+  /** Called when a regular sidebar tab is picked, so the host can leave `extraPage`. */
+  onTabSelect?: () => void
+}
+
+function App({ mode = 'personal', businessAccount, extraNav = [], extraPage, onTabSelect }: AppProps) {
+  const isPersonal = mode === 'personal'
+  const readOnly = mode === 'view' || (mode === 'business' && businessAccount?.role === 'VIEWER')
+  const visibleNavItems = isPersonal ? navItems : navItems.filter((item) => !mutationTabKeys.includes(item.key))
+  const visibleBottomNavItems = isPersonal ? bottomNavItems : bottomNavItems.filter((item) => !mutationTabKeys.includes(item.key))
   const [accounts, setAccounts] = useState<Account[]>([])
   const [trades, setTrades] = useState<Trade[]>([])
   // Accounts shared to this user via the backend workspace layer (Phase
@@ -217,12 +246,13 @@ function App() {
   const [remoteOnlyAccountIds, setRemoteOnlyAccountIds] = useState<Set<string>>(new Set())
   const [selectedAccount, setSelectedAccount] = useState<string>('all')
   const [activeTab, setActiveTab] = useState<TabKey>('dashboard')
+  const shownTab = extraPage ? null : activeTab
   const [tradeFormOpen, setTradeFormOpen] = useState(false)
   const [quickMode, setQuickMode] = useState(false)
   const [reasonCustomMode, setReasonCustomMode] = useState(false)
   const [accountFormOpen, setAccountFormOpen] = useState(false)
   const [selectedTradeId, setSelectedTradeId] = useState<string | null>(null)
-  const [message, setMessage] = useState('Local data ready')
+  const [message, setMessage] = useState('')
   const [formError, setFormError] = useState('')
   const [accountFormError, setAccountFormError] = useState('')
   const [tradeDraft, setTradeDraft] = useState<TradeDraft>(() => toDraft(''))
@@ -282,13 +312,25 @@ function App() {
   const [filters, setFilters] = useState<JournalFilters>(defaultJournalFilters)
 
   const loadState = async (): Promise<void> => {
-    const nextAccounts = await getAccounts()
-    const nextTrades = await getTrades()
+    // Personal mode: only the user's own (local) accounts. View mode: only
+    // accounts shared with the user as VIEWER, never their own.
+    const nextAccounts = isPersonal ? await getAccounts() : []
+    const nextTrades = isPersonal ? await getTrades() : []
     const storedName = await getProfileName()
-    const remote = await fetchRemoteOnlyAccountsWithTrades()
+    let remote: { accounts: Account[]; trades: Trade[] } = { accounts: [], trades: [] }
+    if (mode === 'view') {
+      remote = await fetchRemoteOnlyAccountsWithTrades(['VIEWER'])
+    } else if (mode === 'business' && businessAccount) {
+      try {
+        remote = await fetchBusinessAccountWithTrades(businessAccount)
+      } catch (err) {
+        setMessage(err instanceof ApiError ? err.message : 'Could not load this business account.')
+      }
+    }
     setAccounts([...nextAccounts, ...remote.accounts])
     setTrades([...nextTrades, ...remote.trades])
-    setRemoteOnlyAccountIds(new Set(remote.accounts.map((a) => a.id)))
+    // Remote accounts are write-protected in the UI only when this session is read-only; an owner's business account stays writable.
+    setRemoteOnlyAccountIds(new Set(readOnly ? remote.accounts.map((a) => a.id) : []))
     setProfileName(storedName)
     setSettingsNameDraft(storedName)
     if (!storedName) {
@@ -296,7 +338,7 @@ function App() {
     }
     setIsLoading(false)
     setSelectedAccount((current) => {
-      if (current !== 'all' && !nextAccounts.some((account) => account.id === current)) {
+      if (current !== 'all' && ![...nextAccounts, ...remote.accounts].some((account) => account.id === current)) {
         return 'all'
       }
 
@@ -495,11 +537,27 @@ function App() {
     }
   }, [notificationsOpen])
 
+  // Personal trades go to Dexie (and sync best-effort); Business trades go straight to the backend, which enforces roles.
+  const persistTrade = async (trade: Trade): Promise<boolean> => {
+    if (mode !== 'business') {
+      await saveTrade(trade)
+      return true
+    }
+    try {
+      await saveBusinessTrade(trade)
+      return true
+    } catch (err) {
+      setMessage(err instanceof ApiError ? err.message : 'Could not save the trade.')
+      return false
+    }
+  }
+
   const refreshAfterTradeAction = async (): Promise<void> => {
     await loadState()
   }
 
   const openTradeForm = (record?: Trade, quick = false): void => {
+    if (readOnly) return
     const defaultAccount =
       selectedAccount !== 'all' && !remoteOnlyAccountIds.has(selectedAccount) ? selectedAccount : writableAccountOptions[0]?.id ?? ''
     const nextAccountId = record?.accountId ?? defaultAccount
@@ -622,7 +680,9 @@ function App() {
         : existingTrade?.instrument,
     }
 
-    await saveTrade(finalTrade)
+    if (!(await persistTrade(finalTrade))) {
+      return
+    }
     await deleteAttachmentsByTradeId(finalTrade.id)
 
     if (tradeAttachment) {
@@ -645,7 +705,7 @@ function App() {
     setQuickMode(false)
     const fallbackAccountId = tradeDraft.accountId || writableAccountOptions[0]?.id || ''
     setTradeDraft(toDraft(fallbackAccountId))
-    setMessage('Trade saved to local database.')
+    setMessage(mode === 'business' ? 'Trade saved.' : 'Trade saved to local database.')
     await refreshAfterTradeAction()
   }
 
@@ -748,6 +808,7 @@ function App() {
   }, [trades, chartState])
 
   const handleTradeDelete = async (tradeId: string): Promise<void> => {
+    if (readOnly) return
     const target = trades.find((item) => item.id === tradeId)
     if (target && remoteOnlyAccountIds.has(target.accountId)) {
       setMessage('This is a shared, read-only account — only its owner can delete trades.')
@@ -758,12 +819,22 @@ function App() {
       return
     }
 
-    await deleteTradeById(tradeId)
+    if (mode === 'business' && target) {
+      try {
+        await deleteBusinessTrade(target.accountId, tradeId)
+      } catch (err) {
+        setMessage(err instanceof ApiError ? err.message : 'Could not delete the trade.')
+        return
+      }
+    } else {
+      await deleteTradeById(tradeId)
+    }
     setMessage('Trade deleted.')
     await refreshAfterTradeAction()
   }
 
   const handleCloseTrade = async (trade: Trade): Promise<void> => {
+    if (readOnly) return
     if (remoteOnlyAccountIds.has(trade.accountId)) {
       setMessage('This is a shared, read-only account — only its owner can edit trades.')
       return
@@ -781,7 +852,9 @@ function App() {
       updatedAt: new Date().toISOString(),
     }
 
-    await saveTrade(updatedTrade)
+    if (!(await persistTrade(updatedTrade))) {
+      return
+    }
     setMessage('Trade closed and P/L updated.')
     await refreshAfterTradeAction()
   }
@@ -813,6 +886,7 @@ function App() {
   }
 
   const openAccountForm = (record?: Account): void => {
+    if (!isPersonal) return
     setAccountFormError('')
     setAccountDraft(
       record
@@ -1186,15 +1260,24 @@ function App() {
               <button type="button" className="close-btn" aria-label="Close menu" onClick={() => setMobileMenuOpen(false)}>×</button>
             </div>
             <nav className="mobile-menu-nav">
-              {navItems.map((item) => {
+              {visibleNavItems.map((item) => {
                 const Icon = item.icon
                 return (
                   <button
                     key={item.key}
                     type="button"
-                    className={activeTab === item.key ? 'nav-item active' : 'nav-item'}
-                    onClick={() => { setActiveTab(item.key); setMobileMenuOpen(false) }}
+                    className={shownTab === item.key ? 'nav-item active' : 'nav-item'}
+                    onClick={() => { setActiveTab(item.key); onTabSelect?.(); setMobileMenuOpen(false) }}
                   >
+                    <Icon size={18} />
+                    <span className="nav-label">{item.label}</span>
+                  </button>
+                )
+              })}
+              {extraNav.map((item) => {
+                const Icon = item.icon
+                return (
+                  <button key={item.key} type="button" className={item.active ? 'nav-item active' : 'nav-item'} onClick={() => { item.onClick(); setMobileMenuOpen(false) }}>
                     <Icon size={18} />
                     <span className="nav-label">{item.label}</span>
                   </button>
@@ -1235,28 +1318,32 @@ function App() {
           </div>
         </div>
 
-        <div className="header-center">
-          <div className="account-selector-wrap">
-            <div className="eyebrow">Trading Account</div>
-            <div className="account-selector-row">
-              <select
-                value={selectedAccount}
-                aria-label="Trading account"
-                onChange={(event) => setSelectedAccount(event.target.value)}
-              >
-                <option value="all">All Accounts</option>
-                {accountOptions.map((account) => (
-                  <option key={account.id} value={account.id}>
-                    {getAccountAlias(account)}
-                  </option>
-                ))}
-              </select>
-              <button type="button" className="icon-btn" aria-label="Add trading account" onClick={() => openAccountForm()}>
-                <Plus size={16} />
-              </button>
+        {mode !== 'business' && (
+          <div className="header-center">
+            <div className="account-selector-wrap">
+              <div className="eyebrow">Trading Account</div>
+              <div className="account-selector-row">
+                <select
+                  value={selectedAccount}
+                  aria-label="Trading account"
+                  onChange={(event) => setSelectedAccount(event.target.value)}
+                >
+                  <option value="all">All Accounts</option>
+                  {accountOptions.map((account) => (
+                    <option key={account.id} value={account.id}>
+                      {getAccountAlias(account)}
+                    </option>
+                  ))}
+                </select>
+                {isPersonal && (
+                  <button type="button" className="icon-btn" aria-label="Add trading account" onClick={() => openAccountForm()}>
+                    <Plus size={16} />
+                  </button>
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         <div className="header-right">
           <div className="search-box">
@@ -1324,15 +1411,24 @@ function App() {
       <div className="layout">
         <aside className="sidebar">
           <nav className="sidebar-nav">
-            {navItems.map((item) => {
+            {visibleNavItems.map((item) => {
               const Icon = item.icon
               return (
                 <button
                   key={item.key}
                   type="button"
-                  className={activeTab === item.key ? 'nav-item active' : 'nav-item'}
-                  onClick={() => setActiveTab(item.key)}
+                  className={shownTab === item.key ? 'nav-item active' : 'nav-item'}
+                  onClick={() => { setActiveTab(item.key); onTabSelect?.() }}
                 >
+                  <Icon size={18} />
+                  <span className="nav-label">{item.label}</span>
+                </button>
+              )
+            })}
+            {extraNav.map((item) => {
+              const Icon = item.icon
+              return (
+                <button key={item.key} type="button" className={item.active ? 'nav-item active' : 'nav-item'} onClick={item.onClick}>
                   <Icon size={18} />
                   <span className="nav-label">{item.label}</span>
                 </button>
@@ -1360,23 +1456,29 @@ function App() {
             </div>
           )}
 
-          {activeTab === 'dashboard' && (
+          {extraPage}
+
+          {shownTab === 'dashboard' && (
             <section className="dashboard-panel">
               <div className="dashboard-header-row">
                 <div>
                   <h2 className="dashboard-greeting">{getGreeting()}{profileName ? `, ${profileName}` : ''}</h2>
                   <p className="dashboard-subtitle">Track. Analyse. Improve. — Your Trading Journey</p>
                 </div>
-                <div className="dashboard-actions">
-                  <button type="button" className="primary-btn" onClick={() => openTradeForm()}>
-                    <Plus size={18} />
-                    Add Trade
-                  </button>
-                  <button type="button" className="secondary-btn" onClick={() => openTradeForm(undefined, true)}>
-                    <Zap size={16} />
-                    Quick Add
-                  </button>
-                </div>
+                {!readOnly && (
+                  <div className="dashboard-actions">
+                    {!readOnly && (
+                      <button type="button" className="primary-btn" onClick={() => openTradeForm()}>
+                        <Plus size={18} />
+                        Add Trade
+                      </button>
+                    )}
+                    <button type="button" className="secondary-btn" onClick={() => openTradeForm(undefined, true)}>
+                      <Zap size={16} />
+                      Quick Add
+                    </button>
+                  </div>
+                )}
               </div>
 
               {isLoading ? (
@@ -1534,10 +1636,12 @@ function App() {
                     <div className="empty-state-icon"><NotebookPen size={22} /></div>
                     <h3>No trades yet</h3>
                     <p>Start recording your trading journey.</p>
-                    <button type="button" className="primary-btn" onClick={() => openTradeForm()}>
-                      <Plus size={18} />
-                      Add Trade
-                    </button>
+                    {!readOnly && (
+                      <button type="button" className="primary-btn" onClick={() => openTradeForm()}>
+                        <Plus size={18} />
+                        Add Trade
+                      </button>
+                    )}
                   </div>
                 ) : (
                   <>
@@ -1590,7 +1694,7 @@ function App() {
             </section>
           )}
 
-          {activeTab === 'journal' && (
+          {shownTab === 'journal' && (
             <section className="panel">
               <div className="page-header-row">
                 <div>
@@ -1712,10 +1816,12 @@ function App() {
                   <h3>{trades.length === 0 ? 'No trades yet' : 'No trades found for this selection'}</h3>
                   <p>{trades.length === 0 ? 'Start recording your trading journey.' : 'Try adjusting your filters or clearing them.'}</p>
                   {trades.length === 0 ? (
-                    <button type="button" className="primary-btn" onClick={() => openTradeForm()}>
-                      <Plus size={18} />
-                      Add Trade
-                    </button>
+                    !readOnly && (
+                      <button type="button" className="primary-btn" onClick={() => openTradeForm()}>
+                        <Plus size={18} />
+                        Add Trade
+                      </button>
+                    )
                   ) : (
                     <button type="button" className="secondary-btn" onClick={() => setFilters(defaultJournalFilters)}>
                       <Filter size={16} />
@@ -1802,15 +1908,19 @@ function App() {
                       <p>{selectedTrade.reason}</p>
                     </div>
                     <div className="detail-actions">
-                      <button type="button" className="secondary-btn" onClick={() => openTradeForm(selectedTrade)}>
-                        Edit
-                      </button>
-                      <button type="button" className="secondary-btn" onClick={() => void handleCloseTrade(selectedTrade)}>
-                        Close Trade
-                      </button>
-                      <button type="button" className="danger-btn" onClick={() => void handleTradeDelete(selectedTrade.id)}>
-                        Delete
-                      </button>
+                      {!readOnly && (
+                        <>
+                          <button type="button" className="secondary-btn" onClick={() => openTradeForm(selectedTrade)}>
+                            Edit
+                          </button>
+                          <button type="button" className="secondary-btn" onClick={() => void handleCloseTrade(selectedTrade)}>
+                            Close Trade
+                          </button>
+                          <button type="button" className="danger-btn" onClick={() => void handleTradeDelete(selectedTrade.id)}>
+                            Delete
+                          </button>
+                        </>
+                      )}
                       <button type="button" className="close-btn" aria-label="Close trade details" onClick={() => setSelectedTradeId(null)}>×</button>
                     </div>
                   </div>
@@ -1842,7 +1952,7 @@ function App() {
             </section>
           )}
 
-          {activeTab === 'open-trades' && (
+          {shownTab === 'open-trades' && (
             <section className="panel">
               <div className="page-header-row">
                 <div>
@@ -1856,10 +1966,12 @@ function App() {
                   <div className="empty-state-icon"><Clock3 size={22} /></div>
                   <h3>No open trades yet</h3>
                   <p>Start tracking your current positions from the dashboard.</p>
-                  <button type="button" className="primary-btn" onClick={() => openTradeForm()}>
-                    <Plus size={18} />
-                    Add Trade
-                  </button>
+                  {!readOnly && (
+                    <button type="button" className="primary-btn" onClick={() => openTradeForm()}>
+                      <Plus size={18} />
+                      Add Trade
+                    </button>
+                  )}
                 </div>
               ) : (
                 <div className="table-wrap">
@@ -1888,7 +2000,7 @@ function App() {
                           <td>{trade.exitPrice || trade.entryPrice}</td>
                           <td className={trade.netPnl >= 0 ? 'profit' : 'loss'}>{getPnlLabel(trade.netPnl)}</td>
                           <td>{trade.tradeDate}</td>
-                          <td><button type="button" className="secondary-btn" onClick={() => void handleCloseTrade(trade)}>Close Trade</button></td>
+                          <td>{!readOnly && <button type="button" className="secondary-btn" onClick={() => void handleCloseTrade(trade)}>Close Trade</button>}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -1915,7 +2027,7 @@ function App() {
                       </div>
                       <div className="trade-card-footer">
                         <span className={trade.netPnl >= 0 ? 'profit' : 'loss'}>{getPnlLabel(trade.netPnl)}</span>
-                        <button type="button" className="secondary-btn" onClick={() => void handleCloseTrade(trade)}>Close Trade</button>
+                        {!readOnly && <button type="button" className="secondary-btn" onClick={() => void handleCloseTrade(trade)}>Close Trade</button>}
                       </div>
                     </div>
                   ))}
@@ -1924,7 +2036,7 @@ function App() {
             </section>
           )}
 
-          {activeTab === 'calendar' && (
+          {shownTab === 'calendar' && (
             <section className="panel">
               <div className="page-header-row">
                 <div>
@@ -1938,10 +2050,12 @@ function App() {
                   <div className="empty-state-icon"><CalendarDays size={22} /></div>
                   <h3>No trades yet</h3>
                   <p>Trades will appear here once you start journaling.</p>
-                  <button type="button" className="primary-btn" onClick={() => openTradeForm()}>
-                    <Plus size={18} />
-                    Add Trade
-                  </button>
+                  {!readOnly && (
+                    <button type="button" className="primary-btn" onClick={() => openTradeForm()}>
+                      <Plus size={18} />
+                      Add Trade
+                    </button>
+                  )}
                 </div>
               ) : (
                 <div className="calendar-grid">
@@ -1962,7 +2076,7 @@ function App() {
             </section>
           )}
 
-          {activeTab === 'analytics' && (
+          {shownTab === 'analytics' && (
             <section className="panel analytics-panel">
               <div className="page-header-row">
                 <div>
@@ -2086,7 +2200,7 @@ function App() {
             </section>
           )}
 
-          {activeTab === 'accounts' && (
+          {shownTab === 'accounts' && isPersonal && (
             <section className="panel">
               <div className="page-header-row">
                 <div>
@@ -2209,7 +2323,7 @@ function App() {
             </section>
           )}
 
-          {activeTab === 'settings' && (
+          {shownTab === 'settings' && isPersonal && (
             <section className="panel settings-panel">
               <div className="page-header-row">
                 <div>
@@ -2926,20 +3040,22 @@ function App() {
         </div>
       )}
 
-      <button type="button" className="mobile-fab" onClick={() => openTradeForm()} aria-label="Add trade">
-        <Plus size={18} />
-        Trade
-      </button>
+      {!readOnly && (
+        <button type="button" className="mobile-fab" onClick={() => openTradeForm()} aria-label="Add trade">
+          <Plus size={18} />
+          Trade
+        </button>
+      )}
 
       <nav className="bottom-nav">
-        {bottomNavItems.map((item) => {
+        {visibleBottomNavItems.map((item) => {
           const Icon = item.icon
           return (
             <button
               key={item.key}
               type="button"
-              className={activeTab === item.key ? 'bottom-nav-item active' : 'bottom-nav-item'}
-              onClick={() => setActiveTab(item.key)}
+              className={shownTab === item.key ? 'bottom-nav-item active' : 'bottom-nav-item'}
+              onClick={() => { setActiveTab(item.key); onTabSelect?.() }}
             >
               <Icon size={20} />
               <span>{item.label}</span>

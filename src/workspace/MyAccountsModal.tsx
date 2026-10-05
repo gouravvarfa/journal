@@ -5,7 +5,7 @@ import { ManageAccessPanel } from './ManageAccessPanel'
 import { LinkLocalAccountPanel } from './LinkLocalAccountPanel'
 
 export function MyAccountsModal({ onClose }: { onClose: () => void }) {
-  const { accounts, accountsLoading, accountsError, currentAccountId, setCurrentAccountId, createAccount, currentWorkspace, refreshAccounts } =
+  const { accounts, accountsLoading, accountsError, currentAccountId, createAccount, currentWorkspace, refreshAccounts } =
     useWorkspaceAuth()
   const [showAdd, setShowAdd] = useState(false)
   const [name, setName] = useState('')
@@ -54,18 +54,6 @@ export function MyAccountsModal({ onClose }: { onClose: () => void }) {
     }
   }
 
-  async function handleToggleArchive(account: TradingAccountApi): Promise<void> {
-    setBusyAccountId(account.id)
-    try {
-      await workspaceApi.updateAccount(account.id, { is_archived: !account.is_archived })
-      await refreshAccounts()
-    } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Could not update the account.')
-    } finally {
-      setBusyAccountId(null)
-    }
-  }
-
   async function handleDelete(account: TradingAccountApi): Promise<void> {
     if (!window.confirm(`Delete "${account.name}"? This cannot be undone.`)) {
       return
@@ -85,7 +73,6 @@ export function MyAccountsModal({ onClose }: { onClose: () => void }) {
     // Backend re-checks every one of these on every request — this is only
     // what decides which buttons are worth showing, never what actually
     // allows the action.
-    const canEdit = account.role === 'OWNER' || account.role === 'ADMIN'
     const canDelete = account.role === 'OWNER'
     const busy = busyAccountId === account.id
 
@@ -99,35 +86,6 @@ export function MyAccountsModal({ onClose }: { onClose: () => void }) {
         <p className="ws-muted small">{account.is_archived ? 'Archived' : 'Active'}</p>
 
         <div className="ws-account-card-actions">
-          <button
-            type="button"
-            className="ws-secondary-btn"
-            onClick={() => {
-              setCurrentAccountId(account.id)
-              onClose()
-            }}
-          >
-            {account.id === currentAccountId ? 'Current' : 'Open'}
-          </button>
-
-          {canEdit && (
-            <button type="button" className="ws-secondary-btn" disabled={busy} onClick={() => void handleToggleArchive(account)}>
-              {account.is_archived ? 'Unarchive' : 'Archive'}
-            </button>
-          )}
-
-          {account.role === 'OWNER' && (
-            <button type="button" className="ws-link-btn" onClick={() => setManageAccessFor(account)}>
-              Users &amp; Permissions
-            </button>
-          )}
-
-          {account.role === 'OWNER' && (
-            <button type="button" className="ws-link-btn" onClick={() => setLinkDataFor(account)}>
-              Link Local Data
-            </button>
-          )}
-
           {canDelete && (
             <button type="button" className="ws-link-btn ws-danger-link" disabled={busy} onClick={() => void handleDelete(account)}>
               Delete

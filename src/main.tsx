@@ -5,10 +5,9 @@ import { registerSW } from 'virtual:pwa-register'
 import './index.css'
 import './workspace/workspace.css'
 import './marketing/marketing.css'
-import App from './App.tsx'
 import { AuthGate } from './workspace/AuthGate.tsx'
 import { WorkspaceAuthProvider } from './workspace/WorkspaceAuthContext.tsx'
-import { WorkspaceBar } from './workspace/WorkspaceBar.tsx'
+import { ModeShell } from './workspace/ModeShell.tsx'
 import { MarketingLayout } from './marketing/MarketingLayout.tsx'
 import { Home } from './marketing/pages/Home.tsx'
 import { Features } from './marketing/pages/Features.tsx'
@@ -21,12 +20,21 @@ import { Contact } from './marketing/pages/Contact.tsx'
 
 registerSW({ immediate: true })
 
+// crypto.randomUUID only exists in secure contexts (https / localhost); opened by LAN IP over http it is missing.
+if (typeof crypto.randomUUID !== 'function') {
+  Object.defineProperty(crypto, 'randomUUID', {
+    value: () =>
+      '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, (c) =>
+        (Number(c) ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (Number(c) / 4)))).toString(16),
+      ),
+  })
+}
+
 function TradingJournalApp() {
   return (
     <WorkspaceAuthProvider>
       <AuthGate>
-        <WorkspaceBar />
-        <App />
+        <ModeShell />
       </AuthGate>
     </WorkspaceAuthProvider>
   )

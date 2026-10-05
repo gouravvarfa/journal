@@ -69,6 +69,8 @@ html, body, #root {
 
 body {
   min-height: 100vh;
+  /* The page itself never scrolls sideways; wide tables scroll inside their own containers. */
+  overflow-x: hidden;
 }
 
 button, input, select, textarea {

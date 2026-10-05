@@ -145,10 +145,12 @@ export async function unlinkAccountFromSharing(localAccountId: string): Promise<
  * they created without linking it). Rendered read-only in App.tsx: this
  * layer never writes to Dexie for these, only surfaces them in memory.
  */
-export async function fetchRemoteOnlyAccountsWithTrades(): Promise<{ accounts: Account[]; trades: Trade[] }> {
+export async function fetchRemoteOnlyAccountsWithTrades(
+  roles?: Array<TradingAccountApi['role']>,
+): Promise<{ accounts: Account[]; trades: Trade[] }> {
   try {
     const [remoteAccounts, linkedBackendIds] = await Promise.all([workspaceApi.listAccounts(), getLinkedBackendAccountIds()])
-    const remoteOnly = remoteAccounts.filter((a) => !linkedBackendIds.has(a.id))
+    const remoteOnly = remoteAccounts.filter((a) => !linkedBackendIds.has(a.id) && (!roles || roles.includes(a.role)))
     if (remoteOnly.length === 0) {
       return { accounts: [], trades: [] }
     }
@@ -170,4 +172,34 @@ export async function fetchRemoteOnlyAccountsWithTrades(): Promise<{ accounts: A
 
 export async function getLinkedLocalAccountIdSet(): Promise<Set<string>> {
   return getLinkedLocalAccountIds()
+}
+
+/**
+ * Business dashboard: loads one backend account (and its trades) directly,
+ * with no Dexie involvement — Business data never touches local/personal
+ * storage. The backend decides what this user may read.
+ */
+export async function fetchBusinessAccountWithTrades(account: TradingAccountApi): Promise<{ accounts: Account[]; trades: Trade[] }> {
+  const remoteTrades = await workspaceApi.listTrades(account.id)
+  return {
+    accounts: [{ ...toSyntheticAccount(account), alias: account.name }],
+    trades: remoteTrades.map(toLocalTrade),
+  }
+}
+
+/** Creates or updates a trade directly on the backend (Business mode). Throws on failure, including 403 for viewers. */
+export async function saveBusinessTrade(trade: Trade): Promise<void> {
+  try {
+    await workspaceApi.updateTrade(trade.accountId, trade.id, toUpsertPayload(trade))
+  } catch (err) {
+    if (err instanceof ApiError && err.status === 404) {
+      await workspaceApi.createTrade(trade.accountId, toUpsertPayload(trade))
+    } else {
+      throw err
+    }
+  }
+}
+
+export async function deleteBusinessTrade(accountId: string, tradeId: string): Promise<void> {
+  await workspaceApi.deleteTrade(accountId, tradeId)
 }

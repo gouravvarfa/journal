@@ -13,6 +13,8 @@ app = FastAPI(title="Trading Journal API", version="0.1.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
+    # Dev convenience: also accept the page being opened from a private-LAN address (phone on the same Wi-Fi).
+    allow_origin_regex=r"^https?://(192\.168\.\d{1,3}\.\d{1,3}|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})(:\d+)?$",
     allow_credentials=True,  # required for the session cookie to be sent cross-port (5173 -> 8000)
     allow_methods=["*"],
     allow_headers=["*"],

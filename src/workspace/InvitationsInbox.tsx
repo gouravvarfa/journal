@@ -74,7 +74,7 @@ export function InvitationsInbox({ onClose }: { onClose: () => void }) {
       <div className="ws-modal-card" onClick={(e) => e.stopPropagation()}>
         <div className="ws-modal-header">
           <div>
-            <h2>Shared With Me</h2>
+            <h2>Invitations</h2>
             <p className="ws-muted">Invitations waiting for you</p>
           </div>
           <button type="button" className="ws-close-btn" onClick={onClose}>×</button>

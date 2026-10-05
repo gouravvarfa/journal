@@ -8,7 +8,9 @@
  * actually enforces access.
  */
 
-const API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000'
+// Defaults to the same host the page was opened from, so the app also works when opened by LAN IP (e.g. from a phone).
+const API_BASE_URL: string =
+  import.meta.env.VITE_API_BASE_URL ?? `${window.location.protocol}//${window.location.hostname}:8000`
 
 export interface WorkspaceUser {
   id: string

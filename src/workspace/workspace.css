@@ -631,7 +631,8 @@
   position: static;
 }
 
-.ws-user-dropdown {
+/* Needs the extra class: the generic .ws-dropdown rule (left: 0) is declared later and would otherwise win. */
+.ws-dropdown.ws-user-dropdown {
   right: 0;
   left: auto;
   min-width: 240px;
@@ -783,6 +784,7 @@
   max-width: 640px;
   max-height: 85vh;
   overflow-y: auto;
+  overflow-x: hidden;
   animation: ws-modal-in 0.18s cubic-bezier(0.2, 0.8, 0.3, 1);
   background: var(--panel);
   border-radius: var(--radius-lg);
@@ -925,6 +927,7 @@
 }
 
 .ws-members-table td {
+  overflow-wrap: anywhere;
   padding: 8px;
   border-bottom: 1px solid var(--border);
   vertical-align: top;
@@ -978,4 +981,293 @@
   .ws-account-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Post-login mode picker + placeholders */
+.ws-mode-home,
+.ws-mode-placeholder {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--space-6, 32px) var(--space-4, 16px);
+}
+
+.ws-mode-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-4, 16px);
+  margin-top: var(--space-4, 16px);
+}
+
+.ws-mode-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 24px;
+  text-align: left;
+  cursor: pointer;
+  background: var(--panel, #fff);
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 12px;
+  color: inherit;
+  font: inherit;
+}
+
+.ws-mode-card:hover {
+  border-color: #2563eb;
+}
+
+.ws-mode-card-icon {
+  display: inline-flex;
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(37, 99, 235, 0.1);
+  color: #2563eb;
+}
+
+.ws-mode-back {
+  padding: 8px var(--space-4, 16px);
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.ws-mode-back .ws-link-btn {
+  color: #0f172a;
+}
+
+/* Mode select / Business screens: clean light ground, white navbar */
+.ws-mode-screen {
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+.ws-bar.ws-bar-light {
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.ws-bar-light .ws-bar-workspace,
+.ws-bar-light .ws-nav-btn,
+.ws-bar-light .ws-user-menu-name {
+  color: #0f172a;
+}
+
+.ws-bar-light .ws-nav-btn:hover {
+  background: rgba(15, 23, 42, 0.06);
+}
+
+.ws-bar-light .ws-user-menu-trigger {
+  border-color: #e5e7eb;
+}
+
+/* Left sidebar on the mode-select page */
+.ws-mode-layout {
+  display: flex;
+  align-items: flex-start;
+}
+
+.ws-mode-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.ws-sidebar {
+  position: sticky;
+  top: 0;
+  flex: 0 0 232px;
+  width: 232px;
+  min-height: calc(100vh - 52px);
+  padding: 20px 12px;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  box-shadow: 1px 0 2px rgba(15, 23, 42, 0.03);
+}
+
+.ws-sidebar-brand {
+  padding: 4px 12px 16px;
+  font-weight: 700;
+  font-size: 15px;
+  color: #0f172a;
+}
+
+.ws-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ws-sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  color: #475569;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ws-sidebar-item:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.ws-sidebar-item.active {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+@media (max-width: 768px) {
+  .ws-mode-layout {
+    flex-direction: column;
+  }
+
+  .ws-sidebar {
+    position: static;
+    flex-basis: auto;
+    width: 100%;
+    min-height: 0;
+    padding: 8px 12px;
+    border-right: none;
+    border-bottom: 1px solid #e5e7eb;
+    box-shadow: none;
+  }
+
+  .ws-sidebar-brand {
+    display: none;
+  }
+
+  .ws-sidebar-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .ws-sidebar-item {
+    width: auto;
+  }
+}
+
+/* Invitation bell in the navbar */
+.ws-bell-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(15, 23, 42, 0.15);
+  border-radius: 999px;
+  background: transparent;
+  color: #0f172a;
+  cursor: pointer;
+}
+
+.ws-bell-btn:hover {
+  background: rgba(15, 23, 42, 0.06);
+}
+
+.ws-bell-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 17px;
+  text-align: center;
+}
+
+/* Business dashboard header */
+.ws-business-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px var(--space-4, 16px);
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.ws-business-header-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.ws-business-header select {
+  max-width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  font: inherit;
+}
+
+.ws-business-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+}
+
+.ws-business-form input {
+  flex: 1 1 200px;
+  min-width: 0;
+  padding: 8px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font: inherit;
+}
+
+.ws-business-form-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ws-mode-screen {
+  overflow-x: hidden;
+}
+
+/* Business: User and Permissions page */
+.ws-users-page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 24px;
+  background: var(--panel, #fff);
+  border: 1px solid var(--border, #e5e7eb);
+  border-radius: 12px;
+}
+
+.ws-users-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.ws-users-page h2,
+.ws-users-page h3 {
+  margin: 0;
+}
+
+.ws-users-table-wrap {
+  overflow-x: auto;
 }
