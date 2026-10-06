@@ -3242,3 +3242,533 @@ tr.selected-row {
     min-height: 44px;
   }
 }
+
+/* ============================================================ */
+/* Premium redesign pass — dashboard header, sidebar, welcome,   */
+/* metric cards, Account Performance / P&L panels. All overrides */
+/* target the existing classes above — no markup changed, no     */
+/* section/button/sidebar-item removed.                          */
+/* ============================================================ */
+
+.app-shell {
+  background: linear-gradient(180deg, #f4f6fb 0%, #eef1f8 100%);
+}
+
+:root[data-theme='dark'] .app-shell {
+  background: var(--bg);
+}
+
+/* Header */
+
+.topbar {
+  padding: 16px var(--space-5);
+  min-height: 72px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: saturate(180%) blur(10px);
+}
+
+:root[data-theme='dark'] .topbar {
+  background: var(--panel);
+}
+
+.brand-mark {
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  font-size: 15px;
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.32), 0 2px 4px rgba(37, 99, 235, 0.25);
+}
+
+.brand-copy h1 {
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.icon-btn {
+  border-radius: 12px;
+  transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.icon-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.1);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.profile-inline {
+  border-radius: 999px;
+  padding: 5px 14px 5px 5px;
+  transition: all 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.profile-inline:hover {
+  border-color: var(--primary);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.16);
+  transform: translateY(-1px);
+}
+
+.profile-avatar {
+  width: 36px;
+  height: 36px;
+  font-size: 13px;
+  transition: transform 0.18s ease;
+}
+
+.profile-inline:hover .profile-avatar {
+  transform: scale(1.08) rotate(-2deg);
+}
+
+/* Sidebar */
+
+.sidebar {
+  padding: 18px 12px;
+  gap: 3px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+:root[data-theme='dark'] .sidebar {
+  background: var(--panel);
+}
+
+.nav-item {
+  padding: 12px 14px;
+  gap: 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #475569;
+}
+
+:root[data-theme='dark'] .nav-item {
+  color: var(--muted);
+}
+
+.nav-item:hover {
+  background: rgba(37, 99, 235, 0.07);
+  color: var(--primary);
+}
+
+.nav-item.active {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 8px 18px -4px rgba(37, 99, 235, 0.4);
+}
+
+.nav-item.active svg {
+  color: #ffffff;
+}
+
+/* Buttons */
+
+.primary-btn {
+  border-radius: 12px;
+  padding: 13px 22px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3), 0 1px 2px rgba(37, 99, 235, 0.2);
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.primary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -4px rgba(37, 99, 235, 0.45), 0 2px 4px rgba(37, 99, 235, 0.3);
+}
+
+.secondary-btn {
+  border-radius: 12px;
+  padding: 13px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  border: 1.5px solid var(--border-strong);
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.secondary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -6px rgba(15, 23, 42, 0.14);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* Welcome section */
+
+.content {
+  padding: 28px var(--space-5);
+}
+
+.dashboard-panel {
+  gap: 28px;
+}
+
+.dashboard-greeting {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.dashboard-subtitle {
+  display: none;
+}
+
+.dashboard-actions {
+  gap: 12px;
+}
+
+/* Metric cards */
+
+.card-grid {
+  align-items: stretch;
+  gap: 18px;
+}
+
+.stat-card {
+  height: 100%;
+  border-radius: 18px;
+  padding: 24px 24px 22px;
+  gap: 14px;
+  border-top-width: 4px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 10px 24px -14px rgba(15, 23, 42, 0.12);
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px) scale(1.015);
+  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.06), 0 24px 40px -16px rgba(15, 23, 42, 0.2);
+}
+
+.stat-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 13px;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.stat-card:hover .stat-icon {
+  transform: scale(1.12) rotate(-4deg);
+}
+
+.stat-card strong {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.stat-card span {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.stat-card small {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* Account Performance / P&L Overview panels */
+
+.analytics-split {
+  gap: 20px;
+}
+
+.mini-panel {
+  border-radius: 18px;
+  padding: 26px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 10px 24px -14px rgba(15, 23, 42, 0.1);
+}
+
+.mini-panel h3 {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+}
+
+.text-link {
+  font-weight: 800;
+  transition: transform 0.15s ease;
+  display: inline-block;
+}
+
+.text-link:hover {
+  transform: translateX(3px);
+}
+
+.account-mini-list {
+  gap: 10px;
+}
+
+.account-mini {
+  border-radius: 14px;
+  padding: 13px 14px;
+  border-width: 1.5px;
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.account-mini:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px -8px rgba(15, 23, 42, 0.14);
+  border-color: var(--primary);
+}
+
+.broker-badge {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  font-size: 13px;
+}
+
+.account-mini-percent {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.account-mini-percent.profit {
+  background: var(--success-soft);
+}
+
+.account-mini-percent.loss {
+  background: var(--danger-soft);
+}
+
+.range-toggle {
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--bg);
+}
+
+.range-pill {
+  padding: 7px 14px;
+  font-weight: 800;
+  transition: all 0.2s ease;
+}
+
+.range-pill.active {
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.12);
+}
+
+/* Intentional-looking empty state for the P&L chart */
+
+.chart-canvas {
+  border: 1.5px dashed var(--border-strong);
+  border-radius: 14px;
+  background: var(--bg);
+}
+
+.chart-empty {
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chart-empty::before {
+  content: '';
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--primary-soft);
+  border: 1.5px solid var(--border);
+}
+
+@media (max-width: 1100px) {
+  .analytics-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================ */
+/* Premium pass 2 — Recent Trades panel + shared table/empty-    */
+/* state polish (reused across Journal/Open Trades/etc too).     */
+/* Visual-only, no markup changes.                               */
+/* ============================================================ */
+
+.dashboard-recent-head {
+  margin-bottom: 18px;
+}
+
+.dashboard-recent-head h3 {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+}
+
+.table-wrap {
+  border-radius: 14px;
+  border-color: var(--border);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+th {
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  padding: 14px 14px;
+}
+
+td {
+  font-weight: 500;
+}
+
+tbody tr:hover {
+  background: var(--primary-soft);
+}
+
+.badge {
+  padding: 5px 11px;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+}
+
+.empty-state {
+  min-height: 220px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+.empty-state-icon {
+  width: 52px;
+  height: 52px;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.18);
+}
+
+.empty-state h3 {
+  font-size: 16px;
+}
+
+/* ============================================================ */
+/* Welcome-section decorative background texture — a very       */
+/* subtle mountain/skyline watermark behind the greeting, like   */
+/* premium fintech dashboards use. Pure CSS (SVG data-uri), no   */
+/* markup change, non-interactive (pointer-events: none), and    */
+/* confined to this one row so it never overlaps other content.  */
+/* ============================================================ */
+
+.dashboard-header-row {
+  position: relative;
+  overflow: hidden;
+  padding: 22px 26px;
+  border-radius: 18px;
+  background-color: #eef2fb;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 220' preserveAspectRatio='xMaxYMax slice'%3E%3Cpath d='M300 220 L420 90 L500 160 L600 60 L700 150 L780 100 L900 220 Z' fill='%232563eb' fill-opacity='0.05'/%3E%3Cpath d='M420 220 L520 120 L600 180 L700 90 L820 170 L900 130 L900 220 Z' fill='%232563eb' fill-opacity='0.08'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right bottom;
+  background-size: 65% 100%;
+}
+
+:root[data-theme='dark'] .dashboard-header-row {
+  background-color: var(--panel);
+}
+
+.dashboard-header-row > * {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 760px) {
+  .dashboard-header-row {
+    background-size: 100% 100%;
+    padding: 18px 18px;
+  }
+}
+
+/* ============================================================ */
+/* KPI card decorative data-viz graphics — pure CSS/SVG, no       */
+/* markup change. Each graphic sits behind the text (z-index: 0) */
+/* while the real label/number/secondary text (direct children   */
+/* of .stat-card) are promoted above it, so nothing is ever       */
+/* visually covered. Purely decorative, no real data encoded.     */
+/* ============================================================ */
+
+.stat-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card-head,
+.stat-card > strong,
+.stat-card > small {
+  position: relative;
+  z-index: 1;
+}
+
+.stat-card::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.55;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  background-repeat: no-repeat;
+  background-position: bottom right;
+}
+
+.stat-card:hover::after {
+  opacity: 0.85;
+}
+
+/* Net P/L — subtle upward trend line with area fill underneath */
+.profit-card::after {
+  width: 104px;
+  height: 56px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='104' height='56' viewBox='0 0 104 56'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%2316a34a' stop-opacity='0.22'/%3E%3Cstop offset='100%25' stop-color='%2316a34a' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M0 46 L18 40 L34 44 L50 24 L66 30 L82 10 L104 16 L104 56 L0 56 Z' fill='url(%23g)'/%3E%3Cpath d='M0 46 L18 40 L34 44 L50 24 L66 30 L82 10 L104 16' fill='none' stroke='%2316a34a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' stroke-opacity='0.55'/%3E%3C/svg%3E");
+}
+
+.stat-card.profit-card:hover::after {
+  transform: translateY(-2px);
+}
+
+/* Win Rate — subtle progress ring with a center dot */
+.blue-card::after {
+  width: 64px;
+  height: 64px;
+  right: 14px;
+  bottom: 10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='26' fill='none' stroke='%232563eb' stroke-width='5' stroke-opacity='0.12'/%3E%3Ccircle cx='32' cy='32' r='26' fill='none' stroke='%232563eb' stroke-width='5' stroke-linecap='round' stroke-dasharray='40 123' stroke-opacity='0.45' transform='rotate(-90 32 32)'/%3E%3Ccircle cx='32' cy='32' r='4' fill='%232563eb' fill-opacity='0.35'/%3E%3C/svg%3E");
+}
+
+.stat-card.blue-card:hover::after {
+  transform: rotate(8deg);
+}
+
+/* Total Trades — subtle bar chart */
+.purple-card::after {
+  width: 84px;
+  height: 48px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='48' viewBox='0 0 84 48'%3E%3Cg fill='%237c3aed' fill-opacity='0.3'%3E%3Crect x='0' y='28' width='10' height='20' rx='3'/%3E%3Crect x='18' y='16' width='10' height='32' rx='3'/%3E%3Crect x='36' y='22' width='10' height='26' rx='3'/%3E%3Crect x='54' y='4' width='10' height='44' rx='3'/%3E%3Crect x='72' y='14' width='10' height='34' rx='3'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.stat-card.purple-card:hover::after {
+  transform: translateY(-2px);
+}
+
+/* Open Trades — subtle activity bars */
+.amber-card::after {
+  width: 70px;
+  height: 44px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='70' height='44' viewBox='0 0 70 44'%3E%3Cg fill='%23f59e0b' fill-opacity='0.32'%3E%3Crect x='0' y='22' width='11' height='22' rx='3'/%3E%3Crect x='20' y='8' width='11' height='36' rx='3'/%3E%3Crect x='40' y='16' width='11' height='28' rx='3'/%3E%3Crect x='59' y='4' width='11' height='40' rx='3'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.stat-card.amber-card:hover::after {
+  transform: translateY(-2px);
+}
+
+:root[data-theme='dark'] .stat-card::after {
+  opacity: 0.35;
+}
+
+:root[data-theme='dark'] .stat-card:hover::after {
+  opacity: 0.55;
+}
+
+@media (max-width: 480px) {
+  .stat-card::after {
+    opacity: 0.35;
+  }
+}

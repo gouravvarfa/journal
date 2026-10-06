@@ -1,3 +1,4 @@
+import { Mail, UserPlus, Users } from 'lucide-react'
 import { useCallback, useEffect, useState, type FormEvent } from 'react'
 import { ApiError, workspaceApi, type AccountMemberApi, type InvitationApi, type TradingAccountApi } from './api'
 import { useWorkspaceAuth } from './WorkspaceAuthContext'
@@ -6,6 +7,8 @@ function formatDate(iso: string): string {
   const date = new Date(iso.endsWith('Z') ? iso : `${iso}Z`)
   return Number.isNaN(date.getTime()) ? '' : date.toLocaleDateString()
 }
+
+type Tab = 'users' | 'invitations'
 
 /**
  * Business → User and Permissions. Uses the existing per-account member and
@@ -19,6 +22,7 @@ export function UserPermissionsPage({ account }: { account: TradingAccountApi })
   const canView = account.role === 'OWNER' || account.role === 'ADMIN'
   const canManage = account.role === 'OWNER'
 
+  const [tab, setTab] = useState<Tab>('users')
   const [members, setMembers] = useState<AccountMemberApi[] | null>(null)
   const [invitations, setInvitations] = useState<InvitationApi[] | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -96,99 +100,119 @@ export function UserPermissionsPage({ account }: { account: TradingAccountApi })
 
   return (
     <div className="ws-users-page">
-      <div className="ws-users-page-header">
-        <div>
-          <h2>User and Permissions</h2>
-          <p className="ws-muted">Manage users, access and invitations for your business account.</p>
+      <div className="ws-users-card">
+        <div className="ws-users-page-header">
+          <div>
+            <h2>User and Permissions</h2>
+            <p className="ws-muted">Manage users, access and invitations for your business account.</p>
+          </div>
+          {canManage && (
+            <button type="button" className="ws-invite-btn" onClick={() => { setModalError(null); setModalOpen(true) }}>
+              <UserPlus size={16} />
+              Send Invitation
+            </button>
+          )}
         </div>
-        {canManage && (
-          <button type="button" className="ws-primary-btn" onClick={() => { setModalError(null); setModalOpen(true) }}>
-            + Send Invitation
-          </button>
-        )}
-      </div>
 
-      {!canView && <p className="ws-muted">You do not have permission to manage users for this business account.</p>}
-      {error && <p className="ws-error">{error}</p>}
-      {notice && <p className="ws-muted">{notice}</p>}
+        {!canView && <p className="ws-muted">You do not have permission to manage users for this business account.</p>}
+        {error && <p className="ws-error">{error}</p>}
+        {notice && <p className="ws-muted">{notice}</p>}
 
-      {canView && (
-        <>
-          <h3>Users</h3>
-          <div className="ws-users-table-wrap">
-            <table className="ws-members-table">
-              <thead>
-                <tr>
-                  <th>User</th>
-                  <th>Email</th>
-                  <th>Role</th>
-                  <th>Status</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {members === null && !error && (
-                  <tr>
-                    <td colSpan={5} className="ws-muted">Loading…</td>
-                  </tr>
-                )}
+        {canView && (
+          <>
+            <div className="ws-tabs" role="tablist">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={tab === 'users'}
+                className={tab === 'users' ? 'ws-tab active' : 'ws-tab'}
+                onClick={() => setTab('users')}
+              >
+                <Users size={15} />
+                Users
+                {members && <span className="ws-tab-count">{members.length}</span>}
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={tab === 'invitations'}
+                className={tab === 'invitations' ? 'ws-tab active' : 'ws-tab'}
+                onClick={() => setTab('invitations')}
+              >
+                <Mail size={15} />
+                Pending Invitations
+                {invitations && <span className="ws-tab-count">{invitations.length}</span>}
+              </button>
+            </div>
+
+            {tab === 'users' && (
+              <div className="ws-users-rows" role="tabpanel">
+                <div className="ws-users-row ws-users-row-head">
+                  <span>User</span>
+                  <span>Email</span>
+                  <span>Role</span>
+                  <span>Status</span>
+                  <span>Actions</span>
+                </div>
+                {members === null && !error && <div className="ws-users-empty">Loading…</div>}
                 {members?.map((member) => (
-                  <tr key={member.id}>
-                    <td>{member.display_name}</td>
-                    <td>{member.email}</td>
-                    <td>{member.role}</td>
-                    <td>Active</td>
-                    <td>
+                  <div className="ws-users-row" key={member.id}>
+                    <span data-label="User" className="ws-users-cell-primary">{member.display_name}</span>
+                    <span data-label="Email" className="ws-users-cell-muted">{member.email}</span>
+                    <span data-label="Role">
+                      <span className={`ws-role-chip ws-role-chip-${member.role.toLowerCase()}`}>{member.role}</span>
+                    </span>
+                    <span data-label="Status">
+                      <span className="ws-status-chip ws-status-chip-active">Active</span>
+                    </span>
+                    <span data-label="Actions" className="ws-users-cell-actions">
                       {canManage && member.role !== 'OWNER' && member.email !== me?.user.email && (
-                        <button type="button" className="ws-link-btn ws-danger-link" disabled={busyId === member.id} onClick={() => void handleRemove(member)}>
+                        <button type="button" className="ws-row-action ws-row-action-danger" disabled={busyId === member.id} onClick={() => void handleRemove(member)}>
                           Remove
                         </button>
                       )}
-                    </td>
-                  </tr>
+                    </span>
+                  </div>
                 ))}
-              </tbody>
-            </table>
-          </div>
+              </div>
+            )}
 
-          <h3>Pending Invitations</h3>
-          <div className="ws-users-table-wrap">
-            <table className="ws-members-table">
-              <thead>
-                <tr>
-                  <th>Email</th>
-                  <th>Role</th>
-                  <th>Status</th>
-                  <th>Sent</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {invitations?.length === 0 && (
-                  <tr>
-                    <td colSpan={5} className="ws-muted">No pending invitations.</td>
-                  </tr>
-                )}
+            {tab === 'invitations' && (
+              <div className="ws-users-rows" role="tabpanel">
+                <div className="ws-users-row ws-users-row-head">
+                  <span>Email</span>
+                  <span>Role</span>
+                  <span>Status</span>
+                  <span>Sent</span>
+                  <span>Actions</span>
+                </div>
+                {invitations?.length === 0 && <div className="ws-users-empty">No pending invitations.</div>}
                 {invitations?.map((invitation) => (
-                  <tr key={invitation.id}>
-                    <td>{invitation.email}</td>
-                    <td>{invitation.role}</td>
-                    <td>{invitation.is_expired ? 'Expired' : 'Pending'}</td>
-                    <td>{formatDate(invitation.created_at)}</td>
-                    <td>
+                  <div className="ws-users-row" key={invitation.id}>
+                    <span data-label="Email" className="ws-users-cell-primary">{invitation.email}</span>
+                    <span data-label="Role">
+                      <span className={`ws-role-chip ws-role-chip-${invitation.role.toLowerCase()}`}>{invitation.role}</span>
+                    </span>
+                    <span data-label="Status">
+                      <span className={invitation.is_expired ? 'ws-status-chip ws-status-chip-expired' : 'ws-status-chip ws-status-chip-pending'}>
+                        {invitation.is_expired ? 'Expired' : 'Pending'}
+                      </span>
+                    </span>
+                    <span data-label="Sent" className="ws-users-cell-muted">{formatDate(invitation.created_at)}</span>
+                    <span data-label="Actions" className="ws-users-cell-actions">
                       {canManage && (
-                        <button type="button" className="ws-link-btn" disabled={busyId === invitation.id} onClick={() => void handleCancel(invitation)}>
+                        <button type="button" className="ws-row-action ws-row-action-danger" disabled={busyId === invitation.id} onClick={() => void handleCancel(invitation)}>
                           Cancel
                         </button>
                       )}
-                    </td>
-                  </tr>
+                    </span>
+                  </div>
                 ))}
-              </tbody>
-            </table>
-          </div>
-        </>
-      )}
+              </div>
+            )}
+          </>
+        )}
+      </div>
 
       {modalOpen && (
         <div className="ws-modal-backdrop" onClick={() => setModalOpen(false)}>
