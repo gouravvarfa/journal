@@ -1039,14 +1039,9 @@
 }
 
 .ws-mode-card:hover {
-  transform: translateY(-6px) scale(1.02);
   border-color: rgba(79, 70, 229, 0.35);
   box-shadow: 0 20px 32px -16px rgba(30, 41, 59, 0.22), 0 0 0 1px rgba(79, 70, 229, 0.08),
     0 0 24px -4px rgba(79, 70, 229, 0.18);
-}
-
-.ws-mode-card:active {
-  transform: translateY(-3px) scale(1.005);
 }
 
 .ws-mode-card-icon {
@@ -1302,10 +1297,6 @@
 
   .ws-mode-grid {
     grid-template-columns: 1fr;
-  }
-
-  .ws-mode-card:hover {
-    transform: translateY(-3px) scale(1.01);
   }
 }
 

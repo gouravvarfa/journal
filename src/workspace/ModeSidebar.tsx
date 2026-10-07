@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { Bell, Receipt } from 'lucide-react'
 import { BillingPage } from './BillingPage'
 import { InvitationsInbox } from './InvitationsInbox'
@@ -24,8 +25,17 @@ export function ModeSidebar() {
           <span>Billing</span>
         </button>
       </nav>
-      {panel === 'invitations' && <InvitationsInbox onClose={() => setPanel(null)} />}
-      {panel === 'billing' && <BillingPage onClose={() => setPanel(null)} />}
+      {/*
+        Rendered through a portal into document.body instead of staying
+        nested under <aside> (position: sticky). A sticky ancestor creates
+        its own stacking context, which would trap this modal's z-index
+        inside it — letting sibling content elsewhere on the page (e.g. the
+        mode cards) paint on top of the "open" modal. Portalling escapes
+        that trap so the modal always renders above everything, regardless
+        of where it's triggered from.
+      */}
+      {panel === 'invitations' && createPortal(<InvitationsInbox onClose={() => setPanel(null)} />, document.body)}
+      {panel === 'billing' && createPortal(<BillingPage onClose={() => setPanel(null)} />, document.body)}
     </aside>
   )
 }
