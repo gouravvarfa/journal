@@ -20,7 +20,14 @@ def _set_session_cookie(response: Response, token: str) -> None:
         value=token,
         httponly=True,
         secure=settings.cookie_secure,
-        samesite="lax",
+        # "lax" works for local dev (frontend/backend share the "localhost"
+        # site across ports). In production the frontend and backend are
+        # deployed on different hostnames/subdomains — e.g. two separate
+        # onrender.com services, which browsers treat as different sites —
+        # so the cookie must be "none" (requires Secure, which cookie_secure
+        # already guarantees here) or it's silently dropped on every
+        # cross-origin fetch after login.
+        samesite="none" if settings.cookie_secure else "lax",
         max_age=settings.session_ttl_hours * 3600,
         path="/",
     )
