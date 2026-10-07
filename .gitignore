@@ -15,6 +15,8 @@ dist-ssr
 # Backend (Phase 1 local dev)
 backend/.venv
 backend/journal_dev.db
+# Stray copy if uvicorn is ever run from the repo root instead of backend/.
+/journal_dev.db
 backend/.env
 backend/.broker_encryption_key
 backend/**/__pycache__
