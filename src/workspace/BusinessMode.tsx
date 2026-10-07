@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { LayoutGrid, ShieldCheck, UsersRound } from 'lucide-react'
 import App from '../App'
 import type { TradingAccountApi } from './api'
@@ -21,25 +21,17 @@ function isBusinessAccount(account: TradingAccountApi): boolean {
  *
  * Account creation deliberately reuses the existing Accounts panel
  * (MyAccountsModal) instead of a second, parallel "create business account"
- * form — the very first time this user has no business account yet, that
- * panel is opened automatically, pre-filled to create a Business account.
+ * form — opened only when the user asks for it (the "+ Create Business
+ * Account" button below), never automatically on landing here.
  */
 export function BusinessMode() {
   const { accounts, accountsLoading } = useWorkspaceAuth()
   const [panel, setPanel] = useState<'accounts' | 'portfolios' | null>(null)
   const [page, setPage] = useState<'dashboard' | 'users'>('dashboard')
-  const [autoOpened, setAutoOpened] = useState(false)
 
   const businessAccounts = accounts.filter(isBusinessAccount)
   // Account switching UI was removed earlier; the first (only) business account is used.
   const selected = businessAccounts[0] ?? null
-
-  useEffect(() => {
-    if (!accountsLoading && !selected && !autoOpened) {
-      setPanel('accounts')
-      setAutoOpened(true)
-    }
-  }, [accountsLoading, selected, autoOpened])
 
   let main: React.ReactNode
   if (accountsLoading && !selected) {

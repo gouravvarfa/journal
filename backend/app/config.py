@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -11,6 +12,16 @@ class Settings(BaseSettings):
     # except the PRAGMA foreign_keys hook in database.py, which is a no-op
     # for any non-SQLite URL.
     database_url: str = "sqlite:///./journal_dev.db"
+
+    @field_validator("database_url", mode="before")
+    @classmethod
+    def _strip_database_url(cls, value: object) -> object:
+        # Hosting dashboards (Render's env var box included) sometimes carry
+        # a trailing newline/space through a copy-paste, which silently
+        # corrupts the DB name (e.g. "mydb\n") and the connection fails with
+        # a confusing "database does not exist" error. Stripping here means
+        # that class of mistake can never break startup.
+        return value.strip() if isinstance(value, str) else value
 
     session_cookie_name: str = "journal_session"
     session_ttl_hours: int = 24 * 7
