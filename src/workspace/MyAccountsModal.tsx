@@ -4,13 +4,23 @@ import { useWorkspaceAuth } from './WorkspaceAuthContext'
 import { ManageAccessPanel } from './ManageAccessPanel'
 import { LinkLocalAccountPanel } from './LinkLocalAccountPanel'
 
-export function MyAccountsModal({ onClose }: { onClose: () => void }) {
+export function MyAccountsModal({
+  onClose,
+  initialType,
+  autoOpenAdd,
+}: {
+  onClose: () => void
+  /** Pre-fills the "Type" field — used when opened from Business mode so the add-account form is ready to create a Business account. */
+  initialType?: string
+  /** Opens straight to the add-account form instead of the account list — used the first time Business mode has no account yet. */
+  autoOpenAdd?: boolean
+}) {
   const { accounts, accountsLoading, accountsError, currentAccountId, createAccount, currentWorkspace, refreshAccounts } =
     useWorkspaceAuth()
-  const [showAdd, setShowAdd] = useState(false)
+  const [showAdd, setShowAdd] = useState(Boolean(autoOpenAdd))
   const [name, setName] = useState('')
   const [broker, setBroker] = useState('')
-  const [accountType, setAccountType] = useState('Trading')
+  const [accountType, setAccountType] = useState(initialType ?? 'Trading')
   const [error, setError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [manageAccessFor, setManageAccessFor] = useState<TradingAccountApi | null>(null)
@@ -45,7 +55,7 @@ export function MyAccountsModal({ onClose }: { onClose: () => void }) {
       await createAccount(name, broker, accountType)
       setName('')
       setBroker('')
-      setAccountType('Trading')
+      setAccountType(initialType ?? 'Trading')
       setShowAdd(false)
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Could not create the account.')
