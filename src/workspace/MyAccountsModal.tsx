@@ -27,6 +27,11 @@ export function MyAccountsModal({
   const [linkDataFor, setLinkDataFor] = useState<TradingAccountApi | null>(null)
   const [portfolios, setPortfolios] = useState<PortfolioApi[]>([])
   const [portfolioBusyId, setPortfolioBusyId] = useState<string | null>(null)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editName, setEditName] = useState('')
+  const [editBroker, setEditBroker] = useState('')
+  const [editType, setEditType] = useState('')
+  const [editSubmitting, setEditSubmitting] = useState(false)
 
   useEffect(() => {
     if (currentWorkspace) {
@@ -64,6 +69,33 @@ export function MyAccountsModal({
     }
   }
 
+  function startEdit(account: TradingAccountApi): void {
+    setError(null)
+    setEditingId(account.id)
+    setEditName(account.name)
+    setEditBroker(account.broker_name)
+    setEditType(account.account_type)
+  }
+
+  async function handleSaveEdit(event: FormEvent, account: TradingAccountApi): Promise<void> {
+    event.preventDefault()
+    setError(null)
+    setEditSubmitting(true)
+    try {
+      await workspaceApi.updateAccount(account.id, {
+        name: editName.trim(),
+        broker_name: editBroker.trim(),
+        account_type: editType.trim(),
+      })
+      await refreshAccounts()
+      setEditingId(null)
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Could not update the account.')
+    } finally {
+      setEditSubmitting(false)
+    }
+  }
+
   async function handleDelete(account: TradingAccountApi): Promise<void> {
     if (!window.confirm(`Delete "${account.name}"? This cannot be undone.`)) {
       return
@@ -83,8 +115,36 @@ export function MyAccountsModal({
     // Backend re-checks every one of these on every request — this is only
     // what decides which buttons are worth showing, never what actually
     // allows the action.
+    const canEdit = account.role === 'OWNER' || account.role === 'ADMIN'
     const canDelete = account.role === 'OWNER'
     const busy = busyAccountId === account.id
+
+    if (editingId === account.id) {
+      return (
+        <form key={account.id} className="ws-account-card" onSubmit={(e) => void handleSaveEdit(e, account)}>
+          <label className="ws-field small">
+            Account name
+            <input value={editName} onChange={(e) => setEditName(e.target.value)} required minLength={1} maxLength={200} />
+          </label>
+          <label className="ws-field small">
+            Broker
+            <input value={editBroker} onChange={(e) => setEditBroker(e.target.value)} maxLength={120} />
+          </label>
+          <label className="ws-field small">
+            Type
+            <input value={editType} onChange={(e) => setEditType(e.target.value)} maxLength={60} />
+          </label>
+          <div className="ws-account-card-actions">
+            <button type="button" className="ws-link-btn" disabled={editSubmitting} onClick={() => setEditingId(null)}>
+              Cancel
+            </button>
+            <button type="submit" className="ws-primary-btn" disabled={editSubmitting}>
+              {editSubmitting ? 'Saving…' : 'Save'}
+            </button>
+          </div>
+        </form>
+      )
+    }
 
     return (
       <div key={account.id} className={`ws-account-card ${account.id === currentAccountId ? 'active' : ''}`}>
@@ -96,6 +156,11 @@ export function MyAccountsModal({
         <p className="ws-muted small">{account.is_archived ? 'Archived' : 'Active'}</p>
 
         <div className="ws-account-card-actions">
+          {canEdit && (
+            <button type="button" className="ws-link-btn" onClick={() => startEdit(account)}>
+              Edit
+            </button>
+          )}
           {canDelete && (
             <button type="button" className="ws-link-btn ws-danger-link" disabled={busy} onClick={() => void handleDelete(account)}>
               Delete

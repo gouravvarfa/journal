@@ -59,7 +59,7 @@
 .brand-copy h1 {
   margin: 0;
   font-size: 1.15rem;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: -0.02em;
   color: var(--text);
 }
@@ -70,7 +70,7 @@
   display: grid;
   place-items: center;
   border-radius: var(--radius-sm);
-  font-weight: 800;
+  font-weight: 600;
   font-size: 14px;
   letter-spacing: 0.02em;
   background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
@@ -99,7 +99,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted-soft);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .topbar select {
@@ -245,7 +245,7 @@
 .notification-item-copy strong {
   font-size: 13px;
   color: var(--text);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .notification-item-copy span {
@@ -276,7 +276,7 @@
   place-items: center;
   background: linear-gradient(135deg, var(--primary-dark), var(--primary));
   color: white;
-  font-weight: 800;
+  font-weight: 600;
   font-size: 12px;
 }
 
@@ -347,7 +347,7 @@
   background: var(--danger-soft);
   color: var(--danger);
   padding: 11px 16px;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 13.5px;
 }
 
@@ -427,7 +427,7 @@
   align-items: center;
   gap: 6px;
   font-size: 12.5px;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--success);
 }
 
@@ -501,7 +501,7 @@
   border-radius: 999px;
   padding: 5px 10px;
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.04em;
 }
 
@@ -530,7 +530,7 @@
 .dashboard-greeting {
   margin: 0;
   font-size: 1.5rem;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: -0.02em;
   color: var(--text);
 }
@@ -587,7 +587,7 @@
   font-size: 11.5px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .stat-card strong {
@@ -595,7 +595,7 @@
   line-height: 1.1;
   letter-spacing: -0.02em;
   color: var(--text);
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .stat-card small {
@@ -698,7 +698,7 @@
   border: 0;
   background: transparent;
   color: var(--primary);
-  font-weight: 700;
+  font-weight: 600;
   font-size: 13px;
   cursor: pointer;
   white-space: nowrap;
@@ -723,7 +723,7 @@
   background: transparent;
   padding: 6px 12px;
   border-radius: 999px;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 12px;
   color: var(--muted);
   cursor: pointer;
@@ -772,7 +772,7 @@
   border-radius: var(--radius-sm);
   display: grid;
   place-items: center;
-  font-weight: 800;
+  font-weight: 600;
   font-size: 12.5px;
   color: white;
   flex-shrink: 0;
@@ -789,7 +789,7 @@
 .account-mini-copy strong {
   color: var(--text);
   font-size: 13.5px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .account-mini-copy span {
@@ -799,7 +799,7 @@
 }
 
 .account-mini-percent {
-  font-weight: 800;
+  font-weight: 600;
   font-size: 13px;
   white-space: nowrap;
 }
@@ -869,7 +869,7 @@
 .dashboard-recent-head h3 {
   margin: 0;
   font-size: 15px;
-  font-weight: 800;
+  font-weight: 600;
   color: var(--text);
 }
 
@@ -1014,12 +1014,12 @@ tr.selected-row {
 
 .profit {
   color: var(--success);
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .loss {
   color: var(--danger);
-  font-weight: 800;
+  font-weight: 600;
 }
 
 /* Badges */
@@ -1030,7 +1030,7 @@ tr.selected-row {
   padding: 4px 10px;
   border-radius: 999px;
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.02em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -1113,7 +1113,7 @@ tr.selected-row {
 .detail-header h3 {
   margin: 0;
   font-size: 1.15rem;
-  font-weight: 800;
+  font-weight: 600;
   color: var(--text);
 }
 
@@ -1151,12 +1151,12 @@ tr.selected-row {
   font-size: 10.5px;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .detail-grid span {
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text);
 }
 
@@ -1180,7 +1180,7 @@ tr.selected-row {
 .page-header-row h2 {
   margin: 0;
   font-size: 1.35rem;
-  font-weight: 800;
+  font-weight: 600;
   color: var(--text);
   letter-spacing: -0.02em;
 }
@@ -1226,7 +1226,7 @@ tr.selected-row {
 }
 
 .calendar-day span {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--muted);
   font-size: 12px;
 }
@@ -1234,12 +1234,12 @@ tr.selected-row {
 .calendar-day strong {
   font-size: 13.5px;
   color: var(--text);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .calendar-day em {
   font-style: normal;
-  font-weight: 800;
+  font-weight: 600;
   font-size: 15px;
 }
 
@@ -1286,7 +1286,7 @@ tr.selected-row {
   place-items: center;
   background: var(--primary-soft);
   color: var(--primary-dark);
-  font-weight: 800;
+  font-weight: 600;
   flex-shrink: 0;
 }
 
@@ -1302,7 +1302,7 @@ tr.selected-row {
 
 .account-broker-copy h3 {
   font-size: 15px;
-  font-weight: 800;
+  font-weight: 600;
   color: var(--text);
 }
 
@@ -1319,7 +1319,7 @@ tr.selected-row {
   font-size: 11px;
   background: var(--success-soft);
   color: var(--success);
-  font-weight: 800;
+  font-weight: 600;
   white-space: nowrap;
 }
 
@@ -1344,13 +1344,13 @@ tr.selected-row {
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--muted);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .account-metrics-row strong {
   color: var(--text);
   font-size: 15px;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .account-actions {
@@ -1405,7 +1405,7 @@ tr.selected-row {
   border: none;
   border-bottom: 2px solid transparent;
   color: var(--muted);
-  font-weight: 700;
+  font-weight: 600;
   font-size: 13.5px;
   cursor: pointer;
   white-space: nowrap;
@@ -1486,7 +1486,7 @@ tr.selected-row {
 
 .broker-api-pill {
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.02em;
   padding: 2px 8px;
   border-radius: 999px;
@@ -1528,7 +1528,7 @@ tr.selected-row {
 
 .broker-status-message {
   font-size: 12.5px;
-  font-weight: 700;
+  font-weight: 600;
   margin: var(--space-3) 0 0;
 }
 
@@ -1559,7 +1559,7 @@ tr.selected-row {
   flex-direction: column;
   gap: 6px;
   color: var(--muted);
-  font-weight: 700;
+  font-weight: 600;
   font-size: 12.5px;
 }
 
@@ -1617,7 +1617,7 @@ tr.selected-row {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 13px;
   color: var(--text);
 }
@@ -1635,7 +1635,7 @@ tr.selected-row {
   align-items: center;
   gap: 6px;
   color: var(--primary);
-  font-weight: 700;
+  font-weight: 600;
   font-size: 12.5px;
   text-decoration: none;
 }
@@ -1684,7 +1684,7 @@ tr.selected-row {
 .quick-info-heading {
   display: block;
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--muted-soft);
@@ -1804,7 +1804,7 @@ tr.selected-row {
   margin: 0 0 4px;
   color: var(--text);
   font-size: 15px;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .empty-state p {
@@ -1859,7 +1859,7 @@ tr.selected-row {
 .error-banner-copy strong {
   display: block;
   font-size: 13.5px;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .error-banner-copy span {
@@ -1919,7 +1919,7 @@ tr.selected-row {
 .modal-header h2 {
   margin: 0;
   font-size: 1.2rem;
-  font-weight: 800;
+  font-weight: 600;
   color: var(--text);
 }
 
@@ -1963,7 +1963,7 @@ tr.selected-row {
 
 .form-section-title {
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--primary-dark);
@@ -1990,7 +1990,7 @@ tr.selected-row {
   flex-direction: column;
   gap: 6px;
   color: var(--muted);
-  font-weight: 700;
+  font-weight: 600;
   font-size: 12.5px;
 }
 
@@ -2008,7 +2008,7 @@ tr.selected-row {
   background: transparent;
   border-radius: 8px;
   padding: 9px 16px;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 13px;
   cursor: pointer;
   color: var(--muted);
@@ -2069,7 +2069,7 @@ tr.selected-row {
 .stock-card strong {
   font-size: 13.5px;
   color: var(--text);
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .stock-card span {
@@ -2100,13 +2100,13 @@ tr.selected-row {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--muted);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .stock-stats-grid strong {
   font-size: 15px;
   color: var(--text);
-  font-weight: 800;
+  font-weight: 600;
 }
 
 /* Export modal */
@@ -2122,7 +2122,7 @@ tr.selected-row {
   flex-direction: column;
   gap: 6px;
   color: var(--muted);
-  font-weight: 700;
+  font-weight: 600;
   font-size: 12.5px;
 }
 
@@ -2163,7 +2163,7 @@ tr.selected-row {
 
 .export-preview-row strong {
   color: var(--text);
-  font-weight: 800;
+  font-weight: 600;
   text-align: right;
 }
 
@@ -2202,7 +2202,7 @@ tr.selected-row {
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--muted);
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .trade-screenshot-thumb {
@@ -2436,7 +2436,7 @@ tr.selected-row {
   }
 
   .mobile-header-left span {
-    font-weight: 800;
+    font-weight: 600;
     font-size: 14.5px;
     color: var(--text);
     white-space: nowrap;
@@ -2559,7 +2559,7 @@ tr.selected-row {
     border-radius: var(--radius-sm);
     color: var(--muted-soft);
     font-size: 10.5px;
-    font-weight: 700;
+    font-weight: 600;
     cursor: pointer;
     padding: 4px 2px;
   }
@@ -2583,7 +2583,7 @@ tr.selected-row {
     border: 0;
     border-radius: 999px;
     padding: 13px 20px;
-    font-weight: 800;
+    font-weight: 600;
     font-size: 13.5px;
     box-shadow: 0 10px 24px rgba(37, 99, 235, 0.35);
     cursor: pointer;
@@ -2664,7 +2664,7 @@ tr.selected-row {
   .trade-card-top strong {
     font-size: 14.5px;
     color: var(--text);
-    font-weight: 800;
+    font-weight: 600;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -2673,7 +2673,7 @@ tr.selected-row {
   .trade-card-alias {
     flex-shrink: 0;
     font-size: 11px;
-    font-weight: 800;
+    font-weight: 600;
     color: var(--primary-dark);
     background: var(--primary-soft);
     padding: 3px 8px;
@@ -2713,13 +2713,13 @@ tr.selected-row {
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--muted-soft);
-    font-weight: 700;
+    font-weight: 600;
   }
 
   .trade-card-rows strong {
     font-size: 13px;
     color: var(--text);
-    font-weight: 700;
+    font-weight: 600;
   }
 
   .trade-card-footer {
@@ -2845,7 +2845,7 @@ tr.selected-row {
 
 .chart-panel-title strong {
   font-size: 15px;
-  font-weight: 800;
+  font-weight: 600;
   color: var(--text);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2887,7 +2887,7 @@ tr.selected-row {
   border-radius: 999px;
   padding: 9px 16px;
   font-size: 12.5px;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
   min-height: 44px;
   min-width: 44px;
@@ -2916,7 +2916,7 @@ tr.selected-row {
 
 .ohlc-readout strong {
   color: var(--text);
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .ohlc-readout-empty {
@@ -2925,7 +2925,7 @@ tr.selected-row {
 }
 
 .ohlc-readout-time {
-  font-weight: 800;
+  font-weight: 600;
   color: var(--text);
 }
 
@@ -3062,7 +3062,7 @@ tr.selected-row {
   color: var(--muted);
   border-radius: var(--radius-sm);
   font-size: 12.5px;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
 }
@@ -3170,7 +3170,7 @@ tr.selected-row {
 
 .chart-indicator-legend {
   font-size: 11.5px;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--muted);
   background: var(--panel);
   border: 1px solid var(--border);
@@ -3216,7 +3216,7 @@ tr.selected-row {
 
 .chart-range-measurement-item label {
   font-size: 10.5px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.03em;
   text-transform: uppercase;
   color: var(--muted-soft);
@@ -3281,7 +3281,7 @@ tr.selected-row {
 
 .brand-copy h1 {
   font-size: 1.3rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .icon-btn {
@@ -3350,39 +3350,42 @@ tr.selected-row {
 }
 
 .nav-item.active {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-  color: #ffffff;
-  font-weight: 700;
-  box-shadow: 0 8px 18px -4px rgba(37, 99, 235, 0.4);
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--primary-dark);
+  font-weight: 600;
+  box-shadow: inset 0 0 0 1px rgba(37, 99, 235, 0.12);
 }
 
-.nav-item.active svg {
-  color: #ffffff;
+:root[data-theme='dark'] .nav-item.active {
+  background: rgba(59, 130, 246, 0.14);
+  color: #93c5fd;
+  box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.2);
 }
 
 /* Buttons */
 
 .primary-btn {
-  border-radius: 12px;
+  border-radius: 10px;
   padding: 13px 22px;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -0.005em;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3), 0 1px 2px rgba(37, 99, 235, 0.2);
-  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* Soft indigo/slate — matches the accent already used across the mode-picker and Business pages, distinct from the plain blue used for links/badges elsewhere. */
+  background: #4f46e5;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+  transition: background-color 0.18s ease, box-shadow 0.18s ease;
 }
 
 .primary-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 24px -4px rgba(37, 99, 235, 0.45), 0 2px 4px rgba(37, 99, 235, 0.3);
+  background: #4338ca;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
 }
 
 .secondary-btn {
   border-radius: 12px;
   padding: 13px 20px;
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
   border: 1.5px solid var(--border-strong);
   transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
@@ -3405,9 +3408,7 @@ tr.selected-row {
 }
 
 .dashboard-greeting {
-  font-size: 2rem;
-  font-weight: 800;
-  letter-spacing: -0.03em;
+  display: none;
 }
 
 .dashboard-subtitle {
@@ -3436,8 +3437,8 @@ tr.selected-row {
 }
 
 .stat-card:hover {
-  transform: translateY(-5px) scale(1.015);
-  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.06), 0 24px 40px -16px rgba(15, 23, 42, 0.2);
+  transform: none;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 12px 20px -14px rgba(15, 23, 42, 0.14);
 }
 
 .stat-icon {
@@ -3453,19 +3454,19 @@ tr.selected-row {
 
 .stat-card strong {
   font-size: 34px;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.03em;
 }
 
 .stat-card span {
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.08em;
 }
 
 .stat-card small {
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 /* Account Performance / P&L Overview panels */
@@ -3482,12 +3483,12 @@ tr.selected-row {
 
 .mini-panel h3 {
   font-size: 17px;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.015em;
 }
 
 .text-link {
-  font-weight: 800;
+  font-weight: 600;
   transition: transform 0.15s ease;
   display: inline-block;
 }
@@ -3524,7 +3525,7 @@ tr.selected-row {
   padding: 4px 10px;
   border-radius: 999px;
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .account-mini-percent.profit {
@@ -3543,7 +3544,7 @@ tr.selected-row {
 
 .range-pill {
   padding: 7px 14px;
-  font-weight: 800;
+  font-weight: 600;
   transition: all 0.2s ease;
 }
 
@@ -3591,7 +3592,7 @@ tr.selected-row {
 
 .dashboard-recent-head h3 {
   font-size: 17px;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: -0.015em;
 }
 
@@ -3603,7 +3604,7 @@ tr.selected-row {
 
 th {
   font-size: 10.5px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.07em;
   padding: 14px 14px;
 }
@@ -3618,7 +3619,7 @@ tbody tr:hover {
 
 .badge {
   padding: 5px 11px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.03em;
 }
 
@@ -3651,7 +3652,7 @@ tbody tr:hover {
 .dashboard-header-row {
   position: relative;
   overflow: hidden;
-  padding: 22px 26px;
+  padding: 14px 20px;
   border-radius: 18px;
   background-color: #eef2fb;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 220' preserveAspectRatio='xMaxYMax slice'%3E%3Cpath d='M300 220 L420 90 L500 160 L600 60 L700 150 L780 100 L900 220 Z' fill='%232563eb' fill-opacity='0.05'/%3E%3Cpath d='M420 220 L520 120 L600 180 L700 90 L820 170 L900 130 L900 220 Z' fill='%232563eb' fill-opacity='0.08'/%3E%3C/svg%3E");
@@ -3672,7 +3673,7 @@ tbody tr:hover {
 @media (max-width: 760px) {
   .dashboard-header-row {
     background-size: 100% 100%;
-    padding: 18px 18px;
+    padding: 12px 14px;
   }
 }
 
@@ -3771,4 +3772,17 @@ tbody tr:hover {
   .stat-card::after {
     opacity: 0.35;
   }
+}
+
+/* "Back to Modes" entry at the top of the sidebar on Personal/View (they have no WorkspaceBar of their own to host it). */
+.sidebar-back-btn {
+  margin-bottom: 10px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--muted);
+}
+
+.sidebar-back-btn:hover {
+  color: var(--primary);
+  background: transparent;
 }

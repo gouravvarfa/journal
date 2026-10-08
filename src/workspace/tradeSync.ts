@@ -175,15 +175,26 @@ export async function getLinkedLocalAccountIdSet(): Promise<Set<string>> {
 }
 
 /**
- * Business dashboard: loads one backend account (and its trades) directly,
- * with no Dexie involvement — Business data never touches local/personal
- * storage. The backend decides what this user may read.
+ * Business dashboard: loads every given backend account (and its trades)
+ * directly, with no Dexie involvement — Business data never touches
+ * local/personal storage. Every account is fetched independently so one
+ * account the caller can no longer read (role revoked, deleted, etc.)
+ * doesn't take the rest of the dashboard down with it. The backend decides
+ * what this user may read for each account — never trusted client-side.
  */
-export async function fetchBusinessAccountWithTrades(account: TradingAccountApi): Promise<{ accounts: Account[]; trades: Trade[] }> {
-  const remoteTrades = await workspaceApi.listTrades(account.id)
+export async function fetchBusinessAccountWithTrades(accounts: TradingAccountApi[]): Promise<{ accounts: Account[]; trades: Trade[] }> {
+  const perAccount = await Promise.all(
+    accounts.map(async (account) => {
+      const remoteTrades = await workspaceApi.listTrades(account.id).catch(() => [] as TradeApi[])
+      return {
+        account: { ...toSyntheticAccount(account), alias: account.name },
+        trades: remoteTrades.map(toLocalTrade),
+      }
+    }),
+  )
   return {
-    accounts: [{ ...toSyntheticAccount(account), alias: account.name }],
-    trades: remoteTrades.map(toLocalTrade),
+    accounts: perAccount.map((entry) => entry.account),
+    trades: perAccount.flatMap((entry) => entry.trades),
   }
 }
 

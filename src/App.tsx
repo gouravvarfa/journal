@@ -1,4 +1,5 @@
 import {
+  ArrowLeft,
   BarChart3,
   Bell,
   CalendarDays,
@@ -220,21 +221,28 @@ interface AppProps {
   /**
    * 'personal' = the user's own local accounts, full edit.
    * 'view' = accounts shared with the user as VIEWER, strictly read-only.
-   * 'business' = one backend business account (`businessAccount`), read from and written to the backend only; read-only when the user's role is VIEWER.
+   * 'business' = every backend business account this user has access to
+   * (`businessAccounts`), read from and written to the backend only; a
+   * given account is read-only only for the accounts where this user's
+   * role on it is VIEWER (mirrors 'view' mode's per-account gating).
    */
   mode?: 'personal' | 'view' | 'business'
-  businessAccount?: TradingAccountApi
+  businessAccounts?: TradingAccountApi[]
   /** Extra sidebar entries that run an action instead of switching tabs (used by Business for Accounts / Portfolios). */
   extraNav?: Array<{ key: string; label: string; icon: React.ComponentType<{ size?: number }>; onClick: () => void; active?: boolean }>
   /** When set, replaces the tab content in the main area (Business "User and Permissions"). */
   extraPage?: React.ReactNode
   /** Called when a regular sidebar tab is picked, so the host can leave `extraPage`. */
   onTabSelect?: () => void
+  /** When set, shows a "← Modes" button at the top of the sidebar (Personal / View, which have no WorkspaceBar of their own to host it). */
+  onGoHome?: () => void
 }
 
-function App({ mode = 'personal', businessAccount, extraNav = [], extraPage, onTabSelect }: AppProps) {
+function App({ mode = 'personal', businessAccounts = [], extraNav = [], extraPage, onTabSelect, onGoHome }: AppProps) {
   const isPersonal = mode === 'personal'
-  const readOnly = mode === 'view' || (mode === 'business' && businessAccount?.role === 'VIEWER')
+  // Business mode is read-only as a whole only when every account in it is VIEWER-only; a mixed owner+viewer
+  // list stays writable overall, with each VIEWER-role account individually write-protected via remoteOnlyAccountIds below.
+  const readOnly = mode === 'view' || (mode === 'business' && businessAccounts.length > 0 && businessAccounts.every((a) => a.role === 'VIEWER'))
   const visibleNavItems = isPersonal ? navItems : navItems.filter((item) => !mutationTabKeys.includes(item.key))
   const visibleBottomNavItems = isPersonal ? bottomNavItems : bottomNavItems.filter((item) => !mutationTabKeys.includes(item.key))
   const [accounts, setAccounts] = useState<Account[]>([])
@@ -320,17 +328,20 @@ function App({ mode = 'personal', businessAccount, extraNav = [], extraPage, onT
     let remote: { accounts: Account[]; trades: Trade[] } = { accounts: [], trades: [] }
     if (mode === 'view') {
       remote = await fetchRemoteOnlyAccountsWithTrades(['VIEWER'])
-    } else if (mode === 'business' && businessAccount) {
+    } else if (mode === 'business' && businessAccounts.length > 0) {
       try {
-        remote = await fetchBusinessAccountWithTrades(businessAccount)
+        remote = await fetchBusinessAccountWithTrades(businessAccounts)
       } catch (err) {
-        setMessage(err instanceof ApiError ? err.message : 'Could not load this business account.')
+        setMessage(err instanceof ApiError ? err.message : 'Could not load your business accounts.')
       }
     }
     setAccounts([...nextAccounts, ...remote.accounts])
     setTrades([...nextTrades, ...remote.trades])
-    // Remote accounts are write-protected in the UI only when this session is read-only; an owner's business account stays writable.
-    setRemoteOnlyAccountIds(new Set(readOnly ? remote.accounts.map((a) => a.id) : []))
+    // Remote accounts are write-protected per-account: every View-mode account (all VIEWER by
+    // definition) plus any individually VIEWER-role account within a Business account list —
+    // an owner/admin account in that same list stays writable.
+    const viewerOnlyBusinessIds = new Set(businessAccounts.filter((a) => a.role === 'VIEWER').map((a) => a.id))
+    setRemoteOnlyAccountIds(new Set(mode === 'view' ? remote.accounts.map((a) => a.id) : viewerOnlyBusinessIds))
     setProfileName(storedName)
     setSettingsNameDraft(storedName)
     if (!storedName) {
@@ -1410,6 +1421,12 @@ function App({ mode = 'personal', businessAccount, extraNav = [], extraPage, onT
 
       <div className="layout">
         <aside className="sidebar">
+          {onGoHome && (
+            <button type="button" className="nav-item sidebar-back-btn" onClick={onGoHome}>
+              <ArrowLeft size={18} />
+              <span className="nav-label">Modes</span>
+            </button>
+          )}
           <nav className="sidebar-nav">
             {visibleNavItems.map((item) => {
               const Icon = item.icon

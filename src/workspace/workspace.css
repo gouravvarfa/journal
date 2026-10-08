@@ -79,7 +79,7 @@
   gap: 10px;
   color: var(--text);
   text-decoration: none;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 15px;
   position: relative;
   z-index: 1;
@@ -95,14 +95,14 @@
   align-items: center;
   justify-content: center;
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .ws-auth-brand-heading {
   margin: 0;
   font-size: clamp(24px, 2.4vw, 30px);
   line-height: 1.28;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text);
   position: relative;
   z-index: 1;
@@ -183,7 +183,7 @@
   color: var(--muted);
   text-decoration: none;
   font-size: 12.5px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .ws-auth-back-link:hover {
@@ -203,7 +203,7 @@
 .ws-auth-card h2 {
   margin: 0 0 4px;
   font-size: 1.4rem;
-  font-weight: 800;
+  font-weight: 600;
   color: var(--text);
 }
 
@@ -231,7 +231,7 @@
   margin: 4px 0;
   color: var(--muted-soft);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.05em;
 }
 
@@ -259,7 +259,7 @@
   align-self: flex-end;
   margin-top: -8px;
   font-size: 12.5px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .ws-password-hint {
@@ -371,7 +371,7 @@
   flex-direction: column;
   gap: 6px;
   font-size: 12.5px;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--muted);
 }
 
@@ -399,7 +399,7 @@
 .ws-link-btn {
   min-height: 44px;
   border-radius: var(--radius-sm);
-  font-weight: 700;
+  font-weight: 600;
   font-size: 13.5px;
   cursor: pointer;
   transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
@@ -498,7 +498,7 @@
 
 .ws-bar-workspace {
   color: rgba(255, 255, 255, 0.55);
-  font-weight: 700;
+  font-weight: 600;
   font-size: 12px;
   white-space: nowrap;
 }
@@ -563,7 +563,7 @@
   padding: 8px 12px;
   min-height: 38px;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--muted);
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;
@@ -610,7 +610,7 @@
   background: var(--primary);
   color: white;
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -619,7 +619,7 @@
 
 .ws-user-menu-name {
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--text);
   max-width: 140px;
   overflow: hidden;
@@ -682,7 +682,7 @@
 
 .ws-switcher-label {
   font-size: 10px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.03em;
   text-transform: uppercase;
   color: var(--muted-soft);
@@ -734,7 +734,7 @@
 .ws-badge-muted {
   margin-left: auto;
   font-size: 10px;
-  font-weight: 800;
+  font-weight: 600;
   color: var(--muted-soft);
   background: var(--panel-muted);
   padding: 2px 6px;
@@ -829,7 +829,7 @@
 .ws-section-title {
   margin: 4px 0 0;
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--muted-soft);
@@ -865,7 +865,7 @@
 
 .ws-role-pill {
   font-size: 10px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.02em;
   padding: 2px 8px;
   border-radius: 999px;
@@ -912,13 +912,13 @@
   background: var(--danger);
   color: white;
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .ws-members-table th {
   text-align: left;
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
   letter-spacing: 0.03em;
   text-transform: uppercase;
   color: var(--muted-soft);
@@ -1144,7 +1144,7 @@
 
 .ws-bar-light .ws-bar-workspace {
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -0.01em;
   color: #0f172a;
 }
@@ -1208,7 +1208,7 @@
   align-items: center;
   gap: 9px;
   padding: 4px 10px 22px;
-  font-weight: 700;
+  font-weight: 600;
   font-size: 15px;
   letter-spacing: -0.01em;
   color: #0f172a;
@@ -1330,7 +1330,7 @@
   background: #2563eb;
   color: #fff;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 17px;
   text-align: center;
 }
@@ -1505,7 +1505,7 @@
   background: #f1f1f8;
   color: #64748b;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .ws-tab.active .ws-tab-count {
@@ -1537,7 +1537,7 @@
   padding-top: 14px;
   padding-bottom: 10px;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: #94a3b8;
@@ -1582,7 +1582,7 @@
   background: #f1f5f9;
   color: #475569;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: 0.02em;
 }
 
@@ -1608,7 +1608,7 @@
   padding: 3px 9px;
   border-radius: 999px;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .ws-status-chip::before {
@@ -1705,7 +1705,7 @@
     content: attr(data-label);
     flex-shrink: 0;
     font-size: 11px;
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: 0.03em;
     text-transform: uppercase;
     color: #94a3b8;

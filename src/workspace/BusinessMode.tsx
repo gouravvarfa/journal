@@ -15,9 +15,14 @@ function isBusinessAccount(account: TradingAccountApi): boolean {
 
 /**
  * Business dashboard: the same journal UI as Personal Trading (App), pointed
- * at one backend business account at a time. Which accounts appear — and
- * whether this user can write — is decided by the backend (owner/admin vs
- * accepted VIEWER); pending or declined invitations never produce an account.
+ * at every backend business account this user has access to at once — so
+ * Account Performance (an existing App panel that already iterates over
+ * `accounts`) lists every one of them, not just one. Which accounts appear —
+ * and whether each is writable — is decided by the backend per account
+ * (owner/admin vs accepted VIEWER); pending or declined invitations never
+ * produce an account. "User and Permissions" manages the primary (first)
+ * business account, same as before — this change is scoped to Account
+ * Performance / dashboard data, not to member/invitation management.
  *
  * Account creation deliberately reuses the existing Accounts panel
  * (MyAccountsModal) instead of a second, parallel "create business account"
@@ -30,17 +35,16 @@ export function BusinessMode() {
   const [page, setPage] = useState<'dashboard' | 'users'>('dashboard')
 
   const businessAccounts = accounts.filter(isBusinessAccount)
-  // Account switching UI was removed earlier; the first (only) business account is used.
-  const selected = businessAccounts[0] ?? null
+  const primary = businessAccounts[0] ?? null
 
   let main: React.ReactNode
-  if (accountsLoading && !selected) {
+  if (accountsLoading && !primary) {
     main = (
       <div className="ws-mode-placeholder">
         <p className="ws-muted">Loading…</p>
       </div>
     )
-  } else if (!selected) {
+  } else if (!primary) {
     main = (
       <div className="ws-mode-placeholder">
         <h2>Business Dashboard</h2>
@@ -53,15 +57,15 @@ export function BusinessMode() {
   } else {
     main = (
       <App
-        key={selected.id}
+        key={businessAccounts.map((a) => a.id).join(',')}
         mode="business"
-        businessAccount={selected}
+        businessAccounts={businessAccounts}
         extraNav={[
           { key: 'accounts', label: 'Accounts', icon: LayoutGrid, onClick: () => setPanel('accounts') },
           { key: 'portfolios', label: 'Portfolios', icon: UsersRound, onClick: () => setPanel('portfolios') },
           { key: 'users', label: 'User and Permissions', icon: ShieldCheck, onClick: () => setPage('users'), active: page === 'users' },
         ]}
-        extraPage={page === 'users' ? <UserPermissionsPage account={selected} /> : undefined}
+        extraPage={page === 'users' ? <UserPermissionsPage account={primary} /> : undefined}
         onTabSelect={() => setPage('dashboard')}
       />
     )
@@ -73,8 +77,8 @@ export function BusinessMode() {
       {panel === 'accounts' && (
         <MyAccountsModal
           onClose={() => setPanel(null)}
-          initialType={!selected ? BUSINESS_ACCOUNT_TYPE : undefined}
-          autoOpenAdd={!selected}
+          initialType={!primary ? BUSINESS_ACCOUNT_TYPE : undefined}
+          autoOpenAdd={!primary}
         />
       )}
       {panel === 'portfolios' && <PortfoliosModal onClose={() => setPanel(null)} />}
